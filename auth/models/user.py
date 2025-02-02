@@ -2,7 +2,8 @@ from sqlalchemy import Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
 
-from app.utils.globals import Base, NULL, TIMEZONE
+from app.shared.database import Base, NULL
+from app.configuration.settings import TIMEZONE
 
 from typing import Optional, TYPE_CHECKING
 

@@ -2,7 +2,7 @@ from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
 
-from app.utils.globals import Base
+from app.shared.database import Base
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
