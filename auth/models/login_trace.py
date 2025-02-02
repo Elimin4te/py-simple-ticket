@@ -2,15 +2,15 @@ from sqlalchemy import Integer, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
 
-from app.shared.database import Base
-from app.configuration.settings import TIMEZONE
+from shared.database import Base
+from configuration.settings import TIMEZONE
 
 from typing import TYPE_CHECKING
 
 from datetime import datetime
 
 if TYPE_CHECKING:
-    from app.auth.models.user import User
+    from auth.models.user import User
 
 class LoginTrace(Base):
 

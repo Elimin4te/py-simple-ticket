@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     DATABASE_USER: str
     DATABASE_PASSWORD: str
 
+    ENGINE_ECHO: bool = True
+
     class Config:
         env_file = ".env"
 

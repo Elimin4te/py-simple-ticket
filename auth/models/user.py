@@ -2,17 +2,17 @@ from sqlalchemy import Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
 
-from app.shared.database import Base, NULL
-from app.configuration.settings import TIMEZONE
+from shared.database import Base, NULL
+from configuration.settings import TIMEZONE
 
 from typing import Optional, TYPE_CHECKING
 
 from datetime import datetime
 
 if TYPE_CHECKING:
-    from app.auth.models.role import Role
-    from app.auth.models.login_trace import LoginTrace
-    from app.auth.models.action_trace import ActionTrace
+    from auth.models.role import Role
+    from auth.models.login_trace import LoginTrace
+    from auth.models.action_trace import ActionTrace
 
 
 class User(Base):

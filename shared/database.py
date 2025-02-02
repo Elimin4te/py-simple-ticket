@@ -1,5 +1,5 @@
 from sqlalchemy import null
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase 
 
 NULL = null()
 

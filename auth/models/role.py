@@ -2,11 +2,11 @@ from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
 
-from app.shared.database import Base
+from shared.database import Base
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from app.auth.models.user import User
+    from auth.models.user import User
 
 class Role(Base):
     
