@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, DateTime, ForeignKey
+from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
 
@@ -30,19 +30,23 @@ class User(Base):
         name="AF_nombre"
     )
 
-    last_name: Mapped[str] = mapped_column(
+    last_name: Mapped[Optional[str]] = mapped_column(
         String(64),
-        name="AF_apellido"
+        name="AF_apellido",
+        default=NULL
     )
 
     document_number: Mapped[int] = mapped_column(
         Integer,
-        name="NU_cedula"
+        name="NU_cedula",
+        default=0,
+        unique=True
     )
 
     email: Mapped[str] = mapped_column(
         String(128),
-        name="AF_correo"
+        name="AF_correo",
+        unique=True
     )
 
     password: Mapped[str] = mapped_column(
@@ -53,6 +57,7 @@ class User(Base):
     alt_email: Mapped[Optional[str]] = mapped_column(
         String(128), 
         name="AF_correo_alternativo",
+        unique=True,
         default=NULL
     )
 
@@ -62,7 +67,7 @@ class User(Base):
         default=NULL
     )
 
-    personal_phone_number: Mapped[str] = mapped_column(
+    personal_phone_number: Mapped[Optional[str]] = mapped_column(
         String(16),
         name="AF_telefono_personal"
     )
@@ -76,7 +81,13 @@ class User(Base):
     last_login_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True),
         name="TI_ultimo_inicio_sesion",
-        default=datetime.now(tz=TIMEZONE)
+        default=NULL
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        name="BO_activo",
+        default=True
     )
 
     role_code: Mapped[str] = mapped_column(
