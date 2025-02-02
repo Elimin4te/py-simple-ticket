@@ -1,11 +1,16 @@
 from factory.alchemy import SQLAlchemyModelFactory
 from auth.models.role import Role
+from shared.engine import session
 
-
-class SupervisorRoleFactory(SQLAlchemyModelFactory):
+class RoleFactory(SQLAlchemyModelFactory):
 
     class Meta:
         model = Role
+        sqlalchemy_session = session
+        sqlalchemy_session_persistence = 'commit'
+        sqlalchemy_get_or_create = ('code',)
+
+class SupervisorRoleFactory(RoleFactory):
 
     code = 'SPVS'
     name = 'Supervisor'
@@ -13,10 +18,7 @@ class SupervisorRoleFactory(SQLAlchemyModelFactory):
     is_active = True
 
 
-class SupportRoleFactory(SQLAlchemyModelFactory):
-
-    class Meta:
-        model = Role
+class SupportRoleFactory(RoleFactory):
 
     code = 'ASPR'
     name = 'Analista'
@@ -24,10 +26,7 @@ class SupportRoleFactory(SQLAlchemyModelFactory):
     is_active = True
 
 
-class AdminRoleFactory(SQLAlchemyModelFactory):
-
-    class Meta:
-        model = Role
+class AdminRoleFactory(RoleFactory):
 
     code = 'ADM'
     name = 'Administrador'

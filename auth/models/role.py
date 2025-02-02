@@ -4,9 +4,6 @@ from sqlalchemy.orm import mapped_column, relationship
 
 from shared.database import Base
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from auth.models.user import User
 
 class Role(Base):
     
@@ -33,6 +30,3 @@ class Role(Base):
         default=True,
         name='BO_activo'
     )
-
-    # Childrens
-    users: Mapped[list["User"]] = relationship(back_populates="role")

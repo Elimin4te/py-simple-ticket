@@ -1,18 +1,14 @@
 from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import mapped_column, relationship, backref
 
 from shared.database import Base, NULL
 from configuration.settings import TIMEZONE
 
-from typing import Optional, TYPE_CHECKING
-
+from typing import Optional
 from datetime import datetime
 
-if TYPE_CHECKING:
-    from auth.models.role import Role
-    from auth.models.login_trace import LoginTrace
-    from auth.models.action_trace import ActionTrace
+from auth.models.role import Role
 
 
 class User(Base):
@@ -102,12 +98,13 @@ class User(Base):
     )
 
     # Self-related
-    supervises: Mapped[list["User"]] = relationship(back_populates="supervisor")
-    supervisor: Mapped[Optional["User"]] = relationship(back_populates="supervises")
+    supervisor: Mapped[Optional["User"]] = relationship(
+        remote_side=[alias], 
+        backref=backref('supervises', lazy='joined')
+    )
 
     # Parents
-    role: Mapped["Role"] = relationship(back_populates="users")
-
-    # Childrens
-    login_traces: Mapped[list["LoginTrace"]] = relationship(back_populates="user")
-    action_traces: Mapped[list["ActionTrace"]] = relationship(back_populates="user")
+    role: Mapped["Role"] = relationship(
+        remote_side=[Role.code],
+        backref=backref('users', lazy='joined')
+    )

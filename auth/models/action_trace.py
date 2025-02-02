@@ -1,16 +1,15 @@
 from sqlalchemy import Integer, DateTime, ForeignKey, Enum, String
 from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import mapped_column, relationship, backref
 
 from shared.database import Base
 from configuration.settings import TIMEZONE
 
-from typing import Optional, TYPE_CHECKING
-
+from typing import Optional
 from datetime import datetime
 
-if TYPE_CHECKING:
-    from auth.models.user import User
+from auth.models.user import User
+
 
 ACTIONS = Enum(
     "Crear",
@@ -73,4 +72,7 @@ class ActionTrace(Base):
     )
 
     # Parents
-    user: Mapped["User"] = relationship(back_populates="action_traces")
+    user: Mapped["User"] = relationship(
+        remote_side=[User.alias],
+        backref=backref('action_traces', lazy='joined')
+    )

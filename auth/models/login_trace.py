@@ -1,16 +1,14 @@
 from sqlalchemy import Integer, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import mapped_column, relationship, backref
 
 from shared.database import Base
 from configuration.settings import TIMEZONE
 
-from typing import TYPE_CHECKING
-
 from datetime import datetime
 
-if TYPE_CHECKING:
-    from auth.models.user import User
+from auth.models.user import User
+
 
 class LoginTrace(Base):
 
@@ -40,4 +38,7 @@ class LoginTrace(Base):
     )
 
     # Parents
-    user: Mapped["User"] = relationship(back_populates="login_traces")
+    user: Mapped["User"] = relationship(
+        remote_side=[User.alias],
+        backref=backref('login_traces', lazy='joined')
+    )
