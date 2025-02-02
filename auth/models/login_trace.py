@@ -2,7 +2,7 @@ from sqlalchemy import Integer, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship, backref
 
-from shared.database import Base
+from shared.database import Base, NULL, NullableDatetime, nullable_datetime, Id, generic_id
 from configuration.settings import TIMEZONE
 
 from datetime import datetime
@@ -14,14 +14,9 @@ class LoginTrace(Base):
 
     __tablename__ = "IniciosDeSesion"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        autoincrement=True,
-        name="NU_numero"
-    )
+    id: Id = generic_id("NU_numero")
 
-    user_alias: Mapped[int] = mapped_column(
+    user_alias: Mapped[str] = mapped_column(
         ForeignKey("Usuarios.AF_alias"),
         name="AF_usuario"
     )
@@ -32,10 +27,7 @@ class LoginTrace(Base):
         default=datetime.now(tz=TIMEZONE)
     )
 
-    finished_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        name="TI_fecha_fin",
-    )
+    finished_at: NullableDatetime = nullable_datetime('TI_fecha_fin')
 
     # Parents
     user: Mapped["User"] = relationship(
