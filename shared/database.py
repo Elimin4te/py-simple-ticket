@@ -5,42 +5,64 @@ from datetime import datetime
 
 from typing import Optional, TypeAlias
 
+from configuration.settings import TIMEZONE
+
 # Common Types
 NULL = null()
+
+CommonString: TypeAlias = Mapped[str]
 NullableString: TypeAlias = Mapped[Optional[str]]
+
+CommonDatetime: TypeAlias = Mapped[datetime]
 NullableDatetime: TypeAlias = Mapped[Optional[datetime]]
+
 Id: TypeAlias = Mapped[int]
 
 # Common Mapping Shortcuts
 
-nullable_datetime = lambda field_name, timezone_aware=True, **column_kwargs: mapped_column(
+common_datetime = lambda timezone_aware=True, default=datetime.now(tz=TIMEZONE), **column_kwargs: mapped_column(
+    DateTime(timezone=timezone_aware),
+    default=default,
+    **column_kwargs
+)
+""" Generic function for a common datetime field, declaration syntax must be as follows:
+``` python
+date_field: CommonDatetime = common_datetime()
+```
+"""
+
+nullable_datetime = lambda timezone_aware=True, **column_kwargs: mapped_column(
     DateTime(timezone=timezone_aware), 
-    name=field_name, 
     default=NULL, 
     **column_kwargs
 )
 """ Generic function for a nullable datetime field, declaration syntax must be as follows:
 ``` python
-date_field: NullableDatetime = nullable_datetime('my_db_field')
+date_field: NullableDatetime = nullable_datetime()
 ```
 """
 
-nullable_string = lambda length, field_name, **column_kwargs: mapped_column(
+common_string = lambda length, **column_kwargs: mapped_column(String(length), **column_kwargs)
+""" Generic function for a common string field, declaration syntax must be as follows:
+``` python
+string_field: CommonString = common_string(256)
+```
+"""
+
+nullable_string = lambda length, **column_kwargs: mapped_column(
     String(length), 
-    name=field_name, 
     default=NULL, 
     **column_kwargs
 )
 """ Generic function for a nullable datetime field, declaration syntax must be as follows:
 ``` python
-string_field: NullableString = nullable_string(256, 'my_db_field')
+string_field: NullableString = nullable_string(256)
 ```
 """
 
-generic_id = lambda field_name='id', auto_increment=True, **column_kwargs: mapped_column(
+generic_id = lambda  auto_increment=True, **column_kwargs: mapped_column(
     Integer,
     primary_key=True,
-    name=field_name,
     auto_increment=auto_increment,
     **column_kwargs
 )
@@ -50,19 +72,14 @@ id: Id = generic_id('id')
 ```
 """
 
+
 class Base(DeclarativeBase):
     """ Inheritable SQLAlchemy Declarative Base. """
 
-    pass
 
 class IsActiveMixin():
     """ Inheritable for instances that can be logically deleted. """
-
-    is_active: Mapped[bool] = mapped_column(
-        Boolean, 
-        default=True,
-        name='BO_activo'
-    )
+    BO_activo: Mapped[bool] = mapped_column(Boolean, default=True)
 
 
 def get_common_entity_mixin(code_length: int = 4, name_length: int = 16, description_length: int = 128):
@@ -71,21 +88,9 @@ def get_common_entity_mixin(code_length: int = 4, name_length: int = 16, descrip
     class CommonEntityMixin():
         """ Inheritable for instances that have the common code, name and description attribute definition. """
 
-        code: Mapped[str] = mapped_column(
-            String(code_length), 
-            primary_key=True,
-            name='AF_codigo'
-        ) 
-
-        name: Mapped[str] = mapped_column(
-            String(name_length),
-            name='AF_nombre'
-        )
-
-        description: Mapped[str] = mapped_column(
-            String(description_length),
-            name='AF_descripcion'
-        )
+        AF_codigo: Mapped[str] = mapped_column(String(code_length), primary_key=True) 
+        AF_nombre: Mapped[str] = mapped_column(String(name_length))
+        AF_descripcion: Mapped[str] = mapped_column(String(description_length))
     
     return CommonEntityMixin
 
@@ -93,14 +98,8 @@ def get_common_entity_mixin(code_length: int = 4, name_length: int = 16, descrip
 class ArchivableMixin():
     """ Inheritable for instances that can be archived (tickets, incidences). """
 
-    is_archived: Mapped[bool] = mapped_column(
-        Boolean, 
-        default=False,
-        name='BO_archivado'
-    )
-
-    archiving_reason: NullableString = nullable_string(256, 'AF_motivo_archivado')
-
-    archived_at: NullableDatetime = nullable_datetime('AF_fecha_archivado')
+    BO_archivado: Mapped[bool] = mapped_column(Boolean, default=False)
+    AF_motivo_archivado: NullableString = nullable_string(256)
+    AF_fecha_archivado: NullableDatetime = nullable_datetime()
 
 

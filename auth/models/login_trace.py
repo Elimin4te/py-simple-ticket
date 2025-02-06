@@ -1,36 +1,33 @@
-from sqlalchemy import Integer, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column, relationship, backref
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import (
+    Mapped, 
+    mapped_column, 
+    relationship, 
+    backref
+)
 
-from shared.database import Base, NULL, NullableDatetime, nullable_datetime, Id, generic_id
-from configuration.settings import TIMEZONE
+from shared.database import (
+    Base,
+    Id, generic_id,
+    CommonDatetime, common_datetime,
+    CommonString,
+    NullableDatetime, nullable_datetime
+)
 
-from datetime import datetime
-
-from auth.models.user import User
+from auth.models.user import Usuario
 
 
-class LoginTrace(Base):
+class InicioDeSesion(Base):
 
     __tablename__ = "IniciosDeSesion"
 
-    id: Id = generic_id("NU_numero")
-
-    user_alias: Mapped[str] = mapped_column(
-        ForeignKey("Usuarios.AF_alias"),
-        name="AF_usuario"
-    )
-
-    started_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        name="TI_fecha_inicio",
-        default=datetime.now(tz=TIMEZONE)
-    )
-
-    finished_at: NullableDatetime = nullable_datetime('TI_fecha_fin')
+    NU_numero: Id = generic_id()
+    AF_usuario: CommonString = mapped_column(ForeignKey("Usuarios.AF_alias"))
+    TI_fecha_inicio: CommonDatetime = common_datetime()
+    TI_fecha_fin: NullableDatetime = nullable_datetime()
 
     # Parents
-    user: Mapped["User"] = relationship(
-        remote_side=[User.alias],
-        backref=backref('login_traces', lazy='joined')
+    usuario: Mapped["Usuario"] = relationship(
+        remote_side=[Usuario.AF_alias],
+        backref=backref('inicios_de_sesion', lazy='joined')
     )

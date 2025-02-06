@@ -1,6 +1,6 @@
-from shared.database import Base, get_common_entity_mixin, IsActiveMixin
+from shared.database import Base, IsActiveMixin, get_common_entity_mixin
 
 _Common = get_common_entity_mixin()
 
-class Role(Base, _Common, IsActiveMixin):   
+class Rol(Base, _Common, IsActiveMixin):   
     __tablename__ = 'Roles'

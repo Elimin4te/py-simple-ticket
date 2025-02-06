@@ -19,25 +19,16 @@ from shared.database import (
 _Common = get_common_entity_mixin(code_length=8, name_length=64)
 
 
-class Category(Base, _Common, IsActiveMixin):
+class Categoria(Base, _Common, IsActiveMixin):
 
-    __tablename__ = 'Categories'
+    __tablename__ = 'Categorias'
 
-    hierarchy_level: Mapped[int] = mapped_column(
-        Integer,
-        default=0,
-        name="NU_nivel_jerarquia"
-    )
+    NU_nivel_jerarquia: Mapped[int] = mapped_column(Integer, default=0)
 
     # Self Related
 
-    parent_category_code: NullableString = mapped_column(
-        ForeignKey('Categorias.AF_codigo'),
-        default=NULL,
-        name='AF_codigo_categoria_padre'
-    )
-
-    parent_category: Mapped["Category"] = relationship(
-        remote_side=[parent_category_code],
-        backref=backref("child_categories", lazy='joined')
+    AF_codigo_categoria_padre: NullableString = mapped_column(ForeignKey('Categorias.AF_codigo'), default=NULL)
+    categoria_padre: Mapped["Categoria"] = relationship(
+        remote_side=[AF_codigo_categoria_padre],
+        backref=backref("categorias_hijas", lazy='joined')
     )

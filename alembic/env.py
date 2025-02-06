@@ -7,10 +7,8 @@ from alembic import context
 
 from shared.database import Base
 
-from auth.models.user import User
-from auth.models.role import Role
-from auth.models.login_trace import LoginTrace
-from auth.models.action_trace import ActionTrace
+from auth.models import Usuario, Rol, InicioDeSesion, Auditoria
+from tickets.models import Incidencia, Categoria, Prioridad, Ticket, TrazaDeTicket
 
 from configuration.settings import settings
 

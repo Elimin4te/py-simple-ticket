@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer
 
 from sqlalchemy.orm import (
     Mapped, 
@@ -7,7 +7,8 @@ from sqlalchemy.orm import (
 
 from shared.database import (
     Base, 
-    get_common_entity_mixin
+    get_common_entity_mixin,
+    CommonString, common_string
 )
 
 # Code, Name, Description generic entity
@@ -17,17 +18,9 @@ _Common = get_common_entity_mixin(code_length=16, description_length=128)
 del _Common.name
 
 
-class Priority(Base, _Common):
+class Prioridad(Base, _Common):
 
     __tablename__ = 'Prioridades'
 
-    hex_colour: Mapped[str] = mapped_column(
-        String(16),
-        name='AF_color'
-    )
-
-    priority: Mapped[int] = mapped_column(
-        Integer,
-        name='NU_prioridad',
-        default=0
-    )
+    AF_color: CommonString = common_string(16)
+    NU_prioridad: Mapped[int] = mapped_column(Integer, default=0)

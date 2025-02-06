@@ -1,34 +1,34 @@
 from factory.alchemy import SQLAlchemyModelFactory
-from auth.models.role import Role
+from auth.models import Rol
 from shared.engine import session
 
 class RoleFactory(SQLAlchemyModelFactory):
 
     class Meta:
-        model = Role
+        model = Rol
         sqlalchemy_session = session
         sqlalchemy_session_persistence = 'commit'
-        sqlalchemy_get_or_create = ('code',)
+        sqlalchemy_get_or_create = ('AF_codigo',)
 
 class SupervisorRoleFactory(RoleFactory):
 
-    code = 'SPVS'
-    name = 'Supervisor'
-    description = 'Supervisan a los analistas de soporte, pueden crear y asignar tickets, además de ver reportes.'
-    is_active = True
+    AF_codigo = 'SPVS'
+    AF_nombre = 'Supervisor'
+    AF_descripcion = 'Supervisan a los analistas de soporte, pueden crear y asignar tickets, además de ver reportes.'
+    BO_activo = True
 
 
 class SupportRoleFactory(RoleFactory):
 
-    code = 'ASPR'
-    name = 'Analista'
-    description = 'Ven sus tickets asignados, los resuelven y crean trazas.'
-    is_active = True
+    AF_codigo = 'ASPR'
+    AF_nombre = 'Analista'
+    AF_descripcion = 'Ven sus tickets asignados, los resuelven y crean trazas.'
+    BO_activo = True
 
 
 class AdminRoleFactory(RoleFactory):
 
-    code = 'ADM'
-    name = 'Administrador'
-    description = 'Pueden realizar las funciones del supervisor y las del analista, además puede crear nuevos usuarios.'
-    is_active = True
+    AF_codigo = 'ADM'
+    AF_nombre = 'Administrador'
+    AF_descripcion = 'Pueden realizar las funciones del supervisor y las del analista, además puede crear nuevos usuarios.'
+    BO_activo = True
