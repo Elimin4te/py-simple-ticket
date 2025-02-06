@@ -10,11 +10,8 @@ from shared.database import (
     CommonDatetime, common_datetime
 )
 
-from tickets.models.category import Categoria
-from tickets.models.priority import Prioridad
-from tickets.models.incidence import Incidencia
-
-from auth.models.user import User
+from tickets.models import Categoria, Prioridad, Incidencia
+from auth.models import Usuario
 
 
 ESTATUS = Enum(
@@ -61,15 +58,15 @@ class Ticket(Base, ArchivableMixin):
 
     AF_codigo_prioridad: Mapped[str] = mapped_column(ForeignKey('Prioridades.AF_codigo'))
     prioridad: Mapped[Prioridad] = relationship(
-        remote_side=[Prioridad.code],
+        remote_side=[Prioridad.AF_codigo],
         backref=backref('tickets', lazy='joined')
     )
 
     # ---- Assigned User
 
     AF_analista_asignado: Mapped[str] = mapped_column(ForeignKey('Usuarios.AF_alias'))
-    analista_asignado: Mapped[User] = relationship(
-        remote_side=[User.alias],
+    analista_asignado: Mapped[Usuario] = relationship(
+        remote_side=[Usuario.AF_alias],
         backref=backref('assigned_tickets', lazy='joined')
     )
 
@@ -90,14 +87,14 @@ class TrazaDeTicket(Base):
 
     NU_ticket: Mapped[int] = mapped_column(ForeignKey('Tickets.NU_ticket'))
     ticket: Mapped[Ticket] = relationship(
-        remote_side=[Ticket.id],
+        remote_side=[Ticket.NU_ticket],
         backref=backref('trazas', lazy='joined')
     )
 
     # ---- Done by
 
     AF_usuario_realizador: Mapped[str] = mapped_column(ForeignKey('Usuarios.AF_alias'))
-    usuario_realizador: Mapped[User] = relationship(
-        remote_side=[User.alias],
+    usuario_realizador: Mapped[Usuario] = relationship(
+        remote_side=[Usuario.AF_alias],
         backref=backref('trazas_de_ticket', lazy='joined')
     )

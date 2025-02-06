@@ -15,7 +15,7 @@ from shared.database import (
 _Common = get_common_entity_mixin(code_length=16, description_length=128)
 
 # Remove name since it is not needed for this entity
-del _Common.name
+del _Common.AF_nombre
 
 
 class Prioridad(Base, _Common):

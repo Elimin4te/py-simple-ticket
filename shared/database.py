@@ -31,9 +31,9 @@ date_field: CommonDatetime = common_datetime()
 ```
 """
 
-nullable_datetime = lambda timezone_aware=True, **column_kwargs: mapped_column(
+nullable_datetime = lambda timezone_aware=True, default=NULL, **column_kwargs: mapped_column(
     DateTime(timezone=timezone_aware), 
-    default=NULL, 
+    default=default,
     **column_kwargs
 )
 """ Generic function for a nullable datetime field, declaration syntax must be as follows:
@@ -63,7 +63,7 @@ string_field: NullableString = nullable_string(256)
 generic_id = lambda  auto_increment=True, **column_kwargs: mapped_column(
     Integer,
     primary_key=True,
-    auto_increment=auto_increment,
+    autoincrement=auto_increment,
     **column_kwargs
 )
 """ Generic function for an integer id field, declaration syntax must be as follows:

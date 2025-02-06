@@ -18,7 +18,7 @@ from shared.database import (
 from typing import Optional
 from datetime import datetime
 
-from auth.models.role import Rol
+from auth.models import Rol
 
 
 class Usuario(Base, IsActiveMixin):
