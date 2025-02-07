@@ -9,6 +9,7 @@ from shared.database import Base
 
 from auth.models import Usuario, Rol, InicioDeSesion, Auditoria
 from tickets.models import Incidencia, Categoria, Prioridad, Ticket, TrazaDeTicket
+from documents.models import DocumentoAdjunto, ArchivoAdjuntoIncidencia, ArchivoAdjuntoTicket, ArchivoAdjuntoTraza
 
 from configuration.settings import settings
 
