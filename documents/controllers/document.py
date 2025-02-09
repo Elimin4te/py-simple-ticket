@@ -1,1 +1,0 @@
-from shared.controllers.audited import AuditedModelController

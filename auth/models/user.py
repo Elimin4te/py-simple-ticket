@@ -3,7 +3,8 @@ from sqlalchemy.orm import (
     Mapped, 
     mapped_column, 
     relationship, 
-    backref
+    backref,
+    validates
 )
 
 from shared.database import (
@@ -13,6 +14,14 @@ from shared.database import (
     NullableString, nullable_string,
     NullableDatetime, nullable_datetime,
     IsActiveMixin
+)
+
+from shared.validators import (
+    code_validator, 
+    name_validator,
+    regex_validator,
+    length_validator,
+    exists_validator
 )
 
 from typing import Optional
@@ -50,4 +59,56 @@ class Usuario(Base, IsActiveMixin):
         remote_side=[AF_alias], 
         backref=backref('supervisados', lazy='joined')
     )
+
+    @validates('AF_alias')
+    def validate_alias(self, key, value):
+        return code_validator(value, "alias")
+
+    @validates('AF_nombre')
+    def validate_name(self, key, value):
+        return name_validator(value)
+
+    @validates('AF_apellido')
+    def validate_name(self, key, value):
+        if value:
+            return name_validator(value)
+
+    @validates('AF_cedula')
+    def validate_document(self, key, value):
+        return length_validator(str(value), 7, 8, 'La Cédula')
+
+    @validates('AF_correo', 'AF_correo_alternativo')
+    def validate_email(self, key, value):
+        key: str = key
+        if value:
+            return regex_validator(
+                value,
+                r"\"?([-a-zA-Z0-9.`?{}]+@\w+\.\w+)\"?",
+                " ".join(key.split('_')[1:])
+            )
+
+    @validates('AF_telefono_personal')
+    def validate_phone_number(self, key, value):
+        if value:
+            return regex_validator(
+                value,
+                r"^(\+\d{1,3})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})$",
+                'teléfono personal'
+            )
     
+    @validates('AF_telefono_casa')
+    def validate_home_phone_number(self, key, value):
+        if value:
+            return regex_validator(
+                value,
+                r"^0(2\d{3})\d{6}$",
+                'teléfono personal'
+            )
+
+    @validates('AF_codigo_rol')
+    def validate_role(self, key, value):
+        return exists_validator(Rol, AF_codigo=value)
+    
+    @validates('AF_usuario_supervisor')
+    def validate_supervisor(self, key, value):
+        return exists_validator(Usuario, AF_alias=value)

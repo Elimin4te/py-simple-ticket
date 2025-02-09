@@ -1,11 +1,16 @@
 from sqlalchemy import null, Boolean, String, DateTime, Integer
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, validates
 
 from datetime import datetime
 
 from typing import Optional, TypeAlias
 
 from configuration.settings import TIMEZONE
+
+from shared.validators import (
+    code_validator, 
+    name_validator
+)
 
 # Common Types
 NULL = null()
@@ -91,6 +96,14 @@ def get_common_entity_mixin(code_length: int = 4, name_length: int = 16, descrip
         AF_codigo: Mapped[str] = mapped_column(String(code_length), primary_key=True) 
         AF_nombre: Mapped[str] = mapped_column(String(name_length))
         AF_descripcion: Mapped[str] = mapped_column(String(description_length))
+
+        @validates('AF_codigo')
+        def validate_code(self, key, value):
+            return code_validator(value)
+
+        @validates('AF_nombre')
+        def validate_code(self, key, value):
+            return name_validator(value)
     
     return CommonEntityMixin
 
