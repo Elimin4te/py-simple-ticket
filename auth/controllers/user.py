@@ -1,10 +1,11 @@
 from shared.controllers.audited import AuditedModelController
+from shared.controllers.mixins import DisableActionMixin
 from auth.models.user import Usuario
 
 import bcrypt
 
 
-class UserController(AuditedModelController):
+class UserController(AuditedModelController[Usuario], DisableActionMixin):
 
     model = Usuario
     model_pk_field = 'AF_alias'

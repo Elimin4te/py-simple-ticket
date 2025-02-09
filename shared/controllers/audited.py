@@ -1,23 +1,37 @@
-from shared.controllers.crud import ModelController, _BaseDerivatedModelInstance
+from shared.controllers.crud import (
+    ModelController, 
+    _BaseDerivatedModelInstance, 
+    T, Generic
+)
+
 from auth.models import Auditoria, Usuario
 
-
-class AuditedModelController(ModelController):
+class AuditedModelController(ModelController[T], Generic[T]):
     """ A CRUD operation mixin model where create, update and delete operations are recorded into an audit table. """
 
     model_pk_field: str = None
     """ Define the pk_field for the model to specify how the audit record will be created. """
 
-    def __init__(self, session, user: Usuario) -> None:
+    def __init__(self, session, user: Usuario = None) -> None:
         super().__init__(session)
         self.user = user
 
 
-    def get_instance_pk(self, instance: _BaseDerivatedModelInstance):
-        return getattr(instance, self.model_pk_field)
+    def get_instance_pk(self, instance: _BaseDerivatedModelInstance) -> str:
+        return str(getattr(instance, self.model_pk_field))
 
 
-    def create(self, instance: _BaseDerivatedModelInstance):
+    def validate_instance(func):
+        
+        def wrapped(self, *args, **kwargs):
+            assert self.user, "La clase debe ser instanciada con un usuario para poder realizar esta operación."
+            return func(self, *args, **kwargs)
+
+        return wrapped
+
+    @validate_instance
+    def create(self, instance) -> T:
+        
         trace = Auditoria(
             AF_tabla=self.model.__tablename__,
             AF_accion="Crear",
@@ -28,24 +42,30 @@ class AuditedModelController(ModelController):
 
         return super().create(instance)
 
+    @validate_instance
+    def update(self, instance: _BaseDerivatedModelInstance, **updating_fields) -> T:
 
-    def update(self, instance: _BaseDerivatedModelInstance, **updating_fields):
         for key, value in updating_fields.items():
+
+            old_value = str(getattr(instance, key))
+            new_value = str(value)
+            assert not (old_value == new_value), "El valor nuevo no puede ser igual al anterior."
+
             trace = Auditoria(
                 AF_tabla=self.model.__tablename__,
                 AF_accion="Modificar",
                 AF_id_registro=self.get_instance_pk(instance),
                 AF_campo_modificado=key,
-                AF_valor_viejo=getattr(instance, key),
-                AF_valor_nuevo=value,
+                AF_valor_viejo=old_value,
+                AF_valor_nuevo=new_value,
                 AF_usuario_modificador=self.user.AF_alias
             )
             self.session.add(trace)
 
         return super().update(instance, **updating_fields)
 
-
-    def delete(self, instance: _BaseDerivatedModelInstance):
+    @validate_instance
+    def delete(self, instance: _BaseDerivatedModelInstance) -> T:
         trace = Auditoria(
             AF_tabla=self.model.__tablename__,
             AF_accion="Eliminar",
@@ -55,3 +75,12 @@ class AuditedModelController(ModelController):
         self.session.add(trace)
 
         return super().delete(instance)
+
+    def get(self, pk) -> T:
+        return super().get(pk)
+
+    def all(self, *order_by) -> tuple[T]:
+        return super().all(*order_by)
+
+    def filter(self, **criteria) -> tuple[T]:
+        return super().filter(**criteria)

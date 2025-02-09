@@ -20,8 +20,7 @@ from shared.validators import (
     code_validator, 
     name_validator,
     regex_validator,
-    length_validator,
-    exists_validator
+    length_validator
 )
 
 from typing import Optional
@@ -104,11 +103,3 @@ class Usuario(Base, IsActiveMixin):
                 r"^0(2\d{3})\d{6}$",
                 'teléfono personal'
             )
-
-    @validates('AF_codigo_rol')
-    def validate_role(self, key, value):
-        return exists_validator(Rol, AF_codigo=value)
-    
-    @validates('AF_usuario_supervisor')
-    def validate_supervisor(self, key, value):
-        return exists_validator(Usuario, AF_alias=value)

@@ -3,7 +3,8 @@ from sqlalchemy.orm import (
     Mapped, 
     mapped_column, 
     relationship, 
-    backref
+    backref,
+    validates
 )
 
 from shared.database import (

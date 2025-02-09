@@ -2,7 +2,8 @@ from sqlalchemy import Integer
 
 from sqlalchemy.orm import (
     Mapped, 
-    mapped_column
+    mapped_column,
+    validates
 )
 
 from shared.database import (
@@ -24,3 +25,8 @@ class Prioridad(Base, _Common):
 
     AF_color: CommonString = common_string(16)
     NU_prioridad: Mapped[int] = mapped_column(Integer, default=0)
+
+    @validates('NU_prioridad')
+    def validate_priority(self, key, value):
+        assert 999 > value > 0, "La prioridad debe ser al menos de 1 y máximo de 999." 
+        return value

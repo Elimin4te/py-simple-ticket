@@ -1,6 +1,8 @@
 from pydantic_settings import BaseSettings
 from pytz import timezone
 
+from pathlib import Path
+
 class Settings(BaseSettings):
     """Base Setting."""
 
@@ -30,3 +32,4 @@ class Settings(BaseSettings):
 
 settings = Settings()
 TIMEZONE = settings.get_timezone()
+UPLOADED_FILES_DIR = Path('.', 'public')

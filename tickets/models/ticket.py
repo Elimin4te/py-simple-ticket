@@ -10,6 +10,13 @@ from shared.database import (
     CommonDatetime, common_datetime
 )
 
+from documents.models import (
+    ArchivoAdjuntoTicket, 
+    ArchivoAdjuntoTraza, 
+    RelatedDocuments, 
+    related_documents
+)
+
 from tickets.models import Categoria, Prioridad, Incidencia
 from auth.models import Usuario
 
@@ -70,6 +77,9 @@ class Ticket(Base, ArchivableMixin):
         backref=backref('assigned_tickets', lazy='joined')
     )
 
+    # ---- Attached Files
+    documentos_adjuntos: RelatedDocuments = related_documents(ArchivoAdjuntoTicket)
+
 
 class TrazaDeTicket(Base):
 
@@ -98,3 +108,6 @@ class TrazaDeTicket(Base):
         remote_side=[Usuario.AF_alias],
         backref=backref('trazas_de_ticket', lazy='joined')
     )
+
+    # ---- Attached Files
+    documentos_adjuntos: RelatedDocuments = related_documents(ArchivoAdjuntoTraza)

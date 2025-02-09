@@ -30,20 +30,3 @@ def length_validator(value: str, lower: int, upper: int, field_name: str):
     assert lower <= len(value) <= upper, f"{field_name.capitalize()} debe tener al menos {lower} caracteres y máximo {upper}."
     
     return value.strip()
-
-
-def exists_validator(model, **pk_filter):
-
-    keyword = None
-    value = None
-
-    for key, value in pk_filter.values():
-        keyword: str = key.split('_')[-1]
-        keyword = keyword.capitalize()
-        value = value
-
-    assert select(model).filter_by(**pk_filter).exists(), (
-        f"No existe un {model.__name__} con {keyword} {value}."
-    )
-
-    return value

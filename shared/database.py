@@ -1,4 +1,4 @@
-from sqlalchemy import null, Boolean, String, DateTime, Integer
+from sqlalchemy import null, Boolean, String, DateTime, Integer, inspect
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, validates
 
 from datetime import datetime
@@ -9,7 +9,8 @@ from configuration.settings import TIMEZONE
 
 from shared.validators import (
     code_validator, 
-    name_validator
+    name_validator,
+    length_validator
 )
 
 # Common Types
@@ -81,6 +82,9 @@ id: Id = generic_id('id')
 class Base(DeclarativeBase):
     """ Inheritable SQLAlchemy Declarative Base. """
 
+    def __repr__(self) -> str:
+        pks = inspect(self)
+        return f"{self.__class__.__name__}({pks.key[1][0]})"
 
 class IsActiveMixin():
     """ Inheritable for instances that can be logically deleted. """
@@ -113,6 +117,9 @@ class ArchivableMixin():
 
     BO_archivado: Mapped[bool] = mapped_column(Boolean, default=False)
     AF_motivo_archivado: NullableString = nullable_string(256)
-    AF_fecha_archivado: NullableDatetime = nullable_datetime()
+    TI_fecha_archivado: NullableDatetime = nullable_datetime()
 
-
+    @validates('AF_motivo_archivado')
+    def validate_reason(self, key, value):
+        if value:
+            return length_validator(value, 32, 256, "El Motivo de Archivado")
