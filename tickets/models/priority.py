@@ -23,10 +23,10 @@ class Prioridad(Base, _Common):
 
     __tablename__ = 'Prioridades'
 
-    AF_color: CommonString = common_string(16)
-    NU_prioridad: Mapped[int] = mapped_column(Integer, default=0)
+    AF_color: CommonString = common_string(16, unique=True)
+    NU_prioridad: Mapped[int] = mapped_column(Integer, default=0, unique=True)
 
     @validates('NU_prioridad')
     def validate_priority(self, key, value):
-        assert 999 > value > 0, "La prioridad debe ser al menos de 1 y máximo de 999." 
+        assert 1000 > value > 0, "La prioridad debe ser al menos de 1 y máximo de 999." 
         return value

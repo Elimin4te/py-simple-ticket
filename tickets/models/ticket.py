@@ -88,7 +88,7 @@ class TrazaDeTicket(Base):
     NU_traza: Id = generic_id()
     NU_correlativo: Mapped[int] = mapped_column(Integer, default=1)
     AF_actividad: CommonString = common_string(64)
-    AF_descripcion: CommonString = common_string(128)
+    AF_descripcion: CommonString = common_string(1024)
     TI_fecha_actividad: CommonDatetime = common_datetime()
     BO_anulada: Mapped[bool] = mapped_column(Boolean, default=False)
     # Parents

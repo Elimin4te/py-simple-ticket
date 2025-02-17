@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     PROJECT_VERSION: str = "0.0.1"
     TIMEZONE: str = 'America/Caracas'
 
+    SECRET_KEY: str
+
     DATABASE_ENGINE: str
     DATABASE_HOST: str
     DATABASE_PORT: str

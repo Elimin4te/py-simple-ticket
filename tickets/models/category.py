@@ -4,7 +4,8 @@ from sqlalchemy.orm import (
     Mapped, 
     mapped_column, 
     relationship, 
-    backref
+    backref,
+    validates
 )
 
 from shared.database import (
@@ -32,3 +33,8 @@ class Categoria(Base, _Common, IsActiveMixin):
         remote_side=[AF_codigo_categoria_padre],
         backref=backref("categorias_hijas", lazy='joined')
     )
+
+    @validates('NU_nivel_jerarquia')
+    def validate_hierarchy(self, key, value):
+        assert 10 > value > 0, "El nivel de jerarquía debe ser al menos de 1 y máximo de 9." 
+        return value
