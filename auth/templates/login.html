@@ -1,0 +1,124 @@
+<!doctype html>
+<html class="fixed">
+	<head>
+
+		<!-- Basic -->
+		<meta charset="UTF-8">
+
+		<meta name="keywords" content="HTML5 Admin Template" />
+		<meta name="description" content="Porto Admin - Responsive HTML5 Template">
+		<meta name="author" content="okler.net">
+
+		<!-- Mobile Metas -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<!-- Web Fonts  -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600,800,900|Shadows+Into+Light" rel="stylesheet" type="text/css">
+
+		<!-- static/vendor CSS -->
+		<link rel="stylesheet" href="static/vendor/bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" href="static/vendor/animate/animate.css">
+
+		<link rel="stylesheet" href="static/vendor/font-awesome/css/all.min.css" />
+		<link rel="stylesheet" href="static/vendor/magnific-popup/magnific-popup.css" />
+		<link rel="stylesheet" href="static/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" />
+
+		<!-- Theme CSS -->
+		<link rel="stylesheet" href="static/css/theme.css" />
+
+		<!-- Skin CSS -->
+		<link rel="stylesheet" href="static/css/skins/default.css" />
+
+		<!-- Theme Custom CSS -->
+		<link rel="stylesheet" href="static/css/custom.css">
+
+		<!-- Head Libs -->
+		<script src="static/vendor/modernizr/modernizr.js"></script>
+
+	</head>
+	<body>
+		<!-- start: page -->
+		<section class="body-sign">
+			<div class="center-sign">
+				<img class="logo" src="static/img/logo.png" height="48" />
+
+				<div class="panel card-sign">
+					<div class="card-title-sign mt-3 text-right">
+						<h2 class="title text-uppercase font-weight-bold m-0"><i class="fas fa-user mr-1"></i>Iniciar Sesión</h2>
+					</div>
+					<div class="card-body">
+						<form action="/login" method="post">
+							{{ form.csrf_token }}
+
+							<div class="alert alert-danger {% if form_head_error %}d-block{% else %}d-none{% endif %}" role="alert">
+								{{ form_head_error }}
+							  </div>
+
+							<div class="form-group mb-3">
+								<label>Usuario</label>
+								<div class="input-group">
+									<input name="username" type="text" class="form-control form-control-lg" required/>
+									<span class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-user"></i>
+										</span>
+									</span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<div class="clearfix">
+									<label class="float-left">Clave</label>
+								</div>
+								<div class="input-group">
+									<input name="password" type="password" class="form-control form-control-lg" required/>
+									<span class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-lock"></i>
+										</span>
+									</span>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-8">
+									<div class="checkbox-custom checkbox-default">
+										<input id="RememberMe" name="remember_me" type="checkbox"/>
+										<label for="RememberMe">Recuérdame</label>
+									</div>
+								</div>
+								<div class="col-sm-4 text-right">
+									<button type="submit" class="btn btn-primary mt-2">Sign In</button>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+
+			</div>
+		</section>
+		<!-- end: page -->
+
+		<!-- static/vendor -->
+		<script src="static/vendor/jquery/jquery.js"></script>
+		<script src="static/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
+		<script src="static/vendor/popper/umd/popper.min.js"></script>
+		<script src="static/vendor/bootstrap/js/bootstrap.js"></script>
+		<script src="static/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+		<script src="static/vendor/common/common.js"></script>
+		<script src="static/vendor/nanoscroller/nanoscroller.js"></script>
+		<script src="static/vendor/magnific-popup/jquery.magnific-popup.js"></script>
+		<script src="static/vendor/jquery-placeholder/jquery.placeholder.js"></script>
+		
+		<!-- Theme Base, Components and Settings -->
+		<script src="static/js/theme.js"></script>
+		
+		<!-- Theme Custom -->
+		<script src="static/js/custom.js"></script>
+		
+		<!-- Theme Initialization Files -->
+		<script src="static/js/theme.init.js"></script>
+
+	</body>
+</html>

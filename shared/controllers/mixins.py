@@ -4,8 +4,8 @@ from shared.database import Base, ArchivableMixin, IsActiveMixin
 from configuration.settings import TIMEZONE
 from datetime import datetime
 
-_ArchivableModel: TypeAlias = Base[ArchivableMixin]
-_DisabableModel: TypeAlias = Base[IsActiveMixin]
+_ArchivableModel: TypeAlias = ArchivableMixin
+_DisabableModel: TypeAlias = IsActiveMixin
 
 class ArchiveActionMixin:
 

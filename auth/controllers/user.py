@@ -13,15 +13,16 @@ class UserController(AuditedModelController[Usuario], DisableActionMixin):
 
     def hash_password(self, password: str) -> str:
         """ Hash the password using bcrypt with 16 rounds. """
-        return bcrypt.hashpw(bytes(password), bcrypt.gensalt(16)).decode('utf-8')
+        return bcrypt.hashpw(bytes(password, encoding='utf-8'), bcrypt.gensalt(16)).decode('utf-8')
 
 
     def try_password(self, instance: Usuario, password):
-        """ Tries password for given user instance. """
-        hashed = self.hash_password(password)
-        assert instance.AF_contraseña == hashed, "Clave incorrecta."
+        """ Tries password for given user instance (False if the instance is None). """
+        if instance:
+            hashed = self.hash_password(password)
+            return instance.AF_contraseña == hashed
 
-        return True
+        return False
 
 
     def validate_password(self, password: str):

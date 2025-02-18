@@ -23,13 +23,15 @@ from shared.validators import (
     length_validator
 )
 
+from flask_login import UserMixin
+
 from typing import Optional
 from datetime import datetime
 
 from auth.models import Rol
 
 
-class Usuario(Base, IsActiveMixin):
+class Usuario(Base, IsActiveMixin, UserMixin):
 
     __tablename__ = "Usuarios"
 
@@ -103,3 +105,10 @@ class Usuario(Base, IsActiveMixin):
                 r"^0(2\d{3})\d{6}$",
                 'teléfono personal'
             )
+
+    @property
+    def is_active(self):
+        return self.BO_activo
+
+    def get_id(self):
+        return str(self.AF_alias)

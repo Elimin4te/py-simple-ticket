@@ -38,3 +38,4 @@ class Categoria(Base, _Common, IsActiveMixin):
     def validate_hierarchy(self, key, value):
         assert 10 > value > 0, "El nivel de jerarquía debe ser al menos de 1 y máximo de 9." 
         return value
+        
