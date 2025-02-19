@@ -1,29 +1,41 @@
-from flask import redirect, url_for, request
+from flask import redirect, request
 from flask.blueprints import Blueprint
 from flask.views import MethodView
 from flask.templating import render_template
 
-from flask_login import current_user, login_user
+from flask_login import (
+    current_user, 
+    login_user, 
+    login_required, 
+    logout_user
+)
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, PasswordField, SubmitField
+from wtforms import StringField, BooleanField, PasswordField
 from wtforms.validators import DataRequired
 
 from auth.controllers import UserController
 from shared.engine import session
+from shared.menu import app_menu, MenuEntry
+
+from configuration import INDEX_URL
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
+
+class LoginForm(FlaskForm):
+    username = StringField('Usuario', validators=[DataRequired()])
+    password = PasswordField('Clave', validators=[DataRequired()])
+    remember_me = BooleanField('Recuérdame')
+
+
+def render_login(form: LoginForm = None, **context):
+    """ Shortcut function for rendering the login template. """
+    form = form or LoginForm()
+    return render_template('login.html', form=form, **context)
+
+
 class LoginView(MethodView):
-
-    class LoginForm(FlaskForm):
-        username = StringField('Usuario', validators=[DataRequired()])
-        password = PasswordField('Clave', validators=[DataRequired()])
-        remember_me = BooleanField('Recuérdame')
-
-    @property
-    def form(self):
-        return self.LoginForm()
 
     def get_controller(self, user=None):
         return UserController(session, user)
@@ -31,32 +43,42 @@ class LoginView(MethodView):
     def get(self):
 
         if current_user.is_authenticated:
-            return redirect(url_for('/'))
+            return redirect(INDEX_URL)
 
-        return render_template('login.html', form=self.form)
+        return render_login()
 
     def post(self):
 
         controller = self.get_controller()
 
-        if self.form.validate():
+        form_head_error = None
+        form = LoginForm()
 
-            user = controller.get(self.form.username.data)
-            form_head_error = None
+        if form.validate():
 
-            if not controller.try_password(user, self.form.password.data):
+            user = controller.get(form.username.data)
+
+            if not controller.try_password(user, form.password.data):
                 form_head_error = "Credenciales Inválidas."
 
             if not form_head_error:
-                login_user(user, remember=self.form.remember_me.data)
+                login_user(user, remember=form.remember_me.data)
                 next_page = request.args.get('next')
 
                 if not next_page:
-                    next_page = url_for('/')
+                    next_page = INDEX_URL
 
                 return redirect(next_page)
 
-        return render_template('login.html', form=self.form, form_head_error=form_head_error)
+        return render_login(form=form, form_head_error=form_head_error)
+
+
+class LogoutView(MethodView):
+    decorators = [login_required]
+
+    def get(self):
+        logout_user()
+        return redirect('/login')
 
 
 auth_bp.add_url_rule(
@@ -65,3 +87,10 @@ auth_bp.add_url_rule(
     methods=["GET", "POST"],
 )
 
+auth_bp.add_url_rule(
+    "/logout",
+    view_func=LogoutView.as_view("logout-view"),
+    methods=["GET", "POST"],
+)
+
+app_menu.add_entry(MenuEntry('users', 'Gestionar Usuarios', 'fa-user', INDEX_URL, 'autenticación.usuarios', 50))

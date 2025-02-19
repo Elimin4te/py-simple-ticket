@@ -18,6 +18,6 @@ class DefaultAdminUserFactory(SQLAlchemyModelFactory):
     AF_nombre = "Administrador"
     AF_correo = "admin@pyticket.com"
     AF_codigo_rol = "ADM"
-    AF_contraseña = bcrypt.hashpw(b"root", bcrypt.gensalt(16)).decode('utf-8')
+    AF_contraseña = bcrypt.hashpw(bytes('root', encoding='utf-8'), bcrypt.gensalt(16)).decode('utf-8')
 
 

@@ -110,5 +110,9 @@ class Usuario(Base, IsActiveMixin, UserMixin):
     def is_active(self):
         return self.BO_activo
 
+    @property
+    def full_name(self):
+        return f"{self.AF_nombre} {self.AF_apellido or ''}"
+
     def get_id(self):
         return str(self.AF_alias)

@@ -19,8 +19,9 @@ class UserController(AuditedModelController[Usuario], DisableActionMixin):
     def try_password(self, instance: Usuario, password):
         """ Tries password for given user instance (False if the instance is None). """
         if instance:
-            hashed = self.hash_password(password)
-            return instance.AF_contraseña == hashed
+            encoded_password = bytes(password, encoding='utf-8')
+            hashed_password = bytes(instance.AF_contraseña, encoding='utf-8')
+            return bcrypt.checkpw(encoded_password, hashed_password)
 
         return False
 
