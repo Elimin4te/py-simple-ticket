@@ -12,6 +12,8 @@ from documents.models import (
     related_documents
 )
 
+from contextlib import suppress
+
 
 class Incidencia(Base, ArchivableMixin):
 
@@ -26,6 +28,18 @@ class Incidencia(Base, ArchivableMixin):
 
     # ---- Attached Files
     documentos_adjuntos: RelatedDocuments = related_documents(ArchivoAdjuntoIncidencia)
+
+    @property
+    def has_ticket(self):
+
+        ticket = False
+        with suppress(Exception):
+            ticket = getattr(self, 'ticket')
+            ticket = bool(ticket)
+        
+        return ticket
+
+
         
 
 

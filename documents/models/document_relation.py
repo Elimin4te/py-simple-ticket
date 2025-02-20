@@ -11,7 +11,7 @@ from shared.database import (
 class DocumentRelatedMixin:
 
     NU_id: Id = generic_id()
-    NU_id_documento: Id = mapped_column(ForeignKey('DocumentosAdjuntos.id'))
+    NU_id_documento: Id = mapped_column(ForeignKey('DocumentosAdjuntos.NU_id'))
 
 
 class ArchivoAdjuntoIncidencia(Base, DocumentRelatedMixin):

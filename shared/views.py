@@ -6,7 +6,7 @@ from flask_login import current_user
 from shared.menu import app_menu
 
 def render_into_index(rendered_template: str, page_title: str, active_menu_item: str = None):
-    """ Renders the pierced html content into the main index menu. """
+    """ Renders the pierced html content rendered into the main index menu as a HTMLResponse. """
 
     assert current_user.is_authenticated and not current_user.is_anonymous, (
         "Can't render into index menu for anonymous/unathenticated users."

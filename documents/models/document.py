@@ -25,4 +25,4 @@ class DocumentoAdjunto(Base):
 
 
 RelatedDocuments: TypeAlias = Mapped[list[DocumentoAdjunto]]
-related_documents = lambda relation_entity: relationship(secondary=relation_entity)
+related_documents = lambda relation_entity: relationship(secondary=relation_entity.__table__)

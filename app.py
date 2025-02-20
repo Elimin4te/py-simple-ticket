@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, redirect
 from flask_login import LoginManager
 
-from configuration import settings, LOGIN_VIEW
+from configuration import settings, LOGIN_VIEW, INDEX_URL
 from shared.engine import session
 from shared.menu import Menu
 
@@ -27,6 +27,10 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(tickets_bp)
 
 app_menu = Menu()
+
+@app.get('/')
+def default_route():
+    return redirect(INDEX_URL)
 
 
 

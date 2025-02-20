@@ -82,5 +82,5 @@ class AuditedModelController(ModelController[T], Generic[T]):
     def all(self, *order_by) -> tuple[T]:
         return super().all(*order_by)
 
-    def filter(self, **criteria) -> tuple[T]:
-        return super().filter(**criteria)
+    def filter(self, *expression, **criteria) -> tuple[T]:
+        return super().filter(*expression, **criteria)

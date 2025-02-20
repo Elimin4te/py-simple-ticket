@@ -35,5 +35,5 @@ class Settings(BaseSettings):
 settings = Settings()
 TIMEZONE = settings.get_timezone()
 UPLOADED_FILES_DIR = Path('.', 'public')
-INDEX_URL = '/'
+INDEX_URL = '/incidences'
 LOGIN_VIEW = 'login-view'

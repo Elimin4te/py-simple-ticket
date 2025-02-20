@@ -30,7 +30,7 @@ class Categoria(Base, _Common, IsActiveMixin):
 
     AF_codigo_categoria_padre: NullableString = mapped_column(ForeignKey('Categorias.AF_codigo'), default=NULL)
     categoria_padre: Mapped["Categoria"] = relationship(
-        remote_side=[AF_codigo_categoria_padre],
+        remote_side="Categoria.AF_codigo",
         backref=backref("categorias_hijas", lazy='joined')
     )
 
