@@ -19,7 +19,7 @@ class MenuEntry:
     """Navigation entry title."""
     icon: str
     """FontAwesome icon."""
-    href: str
+    href: str = None
     """Target link where this entry points to (invalid if this item has childs)."""
     breadcrumbs: str = None
     """point (.) separated breadcrumb definition for this entry."""
@@ -29,6 +29,10 @@ class MenuEntry:
     """Set's the entry as active in the frontend."""
     childs: list[MenuChild] = field(default_factory=list)
     """Children entries of this list."""
+
+    @property
+    def has_childs(self):
+        return len(self.childs) > 0
 
     def add_child(self, child: MenuChild):
         self.childs.append(child)

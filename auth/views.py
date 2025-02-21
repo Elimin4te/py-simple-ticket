@@ -16,9 +16,13 @@ from wtforms.validators import DataRequired
 
 from auth.controllers import UserController
 from shared.engine import session
-from shared.menu import app_menu, MenuEntry
+from shared.menu import app_menu, MenuEntry, MenuChild
+from shared.views import ListView
 
 from configuration import INDEX_URL
+
+USER_LIST_URL = '/users'
+USER_ADD_URL = '/users/add'
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
@@ -81,6 +85,21 @@ class LogoutView(MethodView):
         return redirect('/login')
 
 
+class UserListView(ListView):
+    decorators = [login_required]
+
+    list_html = ""
+    list_title = "Listado de Usuarios"
+    page_title = "Usuarios"
+    search_option_placeholder= "Buscar por alias..."
+    active_menu_item = "users"
+    force_empty = True
+
+    def get_controller(self, user=None):
+        return UserController(session, user)
+
+
+
 auth_bp.add_url_rule(
     "/login",
     view_func=LoginView.as_view("login-view"),
@@ -93,4 +112,22 @@ auth_bp.add_url_rule(
     methods=["GET", "POST"],
 )
 
-app_menu.add_entry(MenuEntry('users', 'Gestionar Usuarios', 'fa-user', INDEX_URL, 'autenticación.usuarios', 50))
+auth_bp.add_url_rule(
+    "/users",
+    view_func=UserListView.as_view("user-list-view"),
+    methods=["GET"],
+)
+
+app_menu.add_entry(
+    MenuEntry(
+        'users', 
+        'Gestionar Usuarios', 
+        'fa-user', 
+        breadcrumbs='autenticación.usuarios', 
+        position=50,
+        childs=(
+            MenuChild("Listado", USER_LIST_URL),
+            MenuChild("Crear", USER_ADD_URL)
+        )
+    )
+)

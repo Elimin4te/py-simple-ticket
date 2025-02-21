@@ -17,6 +17,7 @@
 						</h1>
 					</div>
 					<div class="col-md-3">
+						{% if not hide_search_bar %}
 						<div>
 							<div class="input-group">
 								<input type="text" class="form-control" id="input-search" placeholder="{{ search_option_placeholder }}">
@@ -25,6 +26,7 @@
 								</span>
 							</div>
 						</div>
+						{% endif %}
 					</div>
 				</div>
 			</header>
