@@ -22,7 +22,7 @@ class PriorityListView(ListView):
 
     list_html = ""
     list_title = "Prioridades"
-    active_menu_item = "tickets"
+    active_menu_item = "priorities"
     force_empty = True
     hide_search_bar = True
 
@@ -37,7 +37,7 @@ class PriorityCreateView(FormView):
     validation_form = PriorityValidationForm
     form_title = "Crear Prioridad"
     page_title = "Prioridades"
-    active_menu_item = "tickets"
+    active_menu_item = "priorities"
 
     def on_valid(self):
         return Response("Paso")

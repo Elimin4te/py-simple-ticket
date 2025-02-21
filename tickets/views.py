@@ -141,11 +141,25 @@ app_menu.add_entry(
         position=30,
         childs=(
             MenuChild("Listado", TICKET_LIST_URL),
-            MenuChild("Crear", TICKET_ADD_URL),
-            MenuChild("Prioridades", PRIORITY_LIST_URL)
+            MenuChild("Crear", TICKET_ADD_URL)
         )
     )
 )
+
+app_menu.add_entry(
+    MenuEntry(
+        'priorities', 
+        'Prioridades', 
+        'fa-exclamation-circle',
+        breadcrumbs='soporte.tickets.prioridades',
+        position=40,
+        childs=(
+            MenuChild("Listado", PRIORITY_LIST_URL),
+            MenuChild("Crear", PRIORITY_ADD_URL),
+        )
+    )
+)
+
 
 app_menu.add_entry(
     MenuEntry(
