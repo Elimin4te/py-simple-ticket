@@ -1,116 +1,31 @@
-<script>
-	BaseURL = window.location.pathname
-</script>
-
-<section class="content-with-menu mailbox">
-	<div class="content-with-menu-container" data-mailbox data-mailbox-view="folder">
-		<div class="inner-body mailbox-folder" style="margin-left: 0px !important;">
-			<!-- START: .mailbox-header -->
-			<header class="mailbox-header">
-				<div class="row">
-					<div class="col-md-9">
-						<h1 class="mailbox-title font-weight-light m-0">
-							<a id="mailboxToggleSidebar" class="sidebar-toggle-btn trigger-toggle-sidebar">
-								<span class="line"></span>
-								<span class="line"></span>
-								<span class="line"></span>
-								<span class="line line-angle1"></span>
-								<span class="line line-angle2"></span>
-							</a>		
-							Listado de Incidencias
-						</h1>
-					</div>
-					<div class="col-md-3">
-						<div>
-							<div class="input-group">
-								<input type="text" class="form-control" id="input-search" placeholder="Buscar por descripción...">
-								<span class="input-group-append">
-									<button class="btn btn-default" type="submit" onclick="search()"><i class="fas fa-search"></i></button>
-								</span>
+<div id="mailbox-email-list" class="mailbox-email-list">
+	<div class="nano">
+		<div class="nano-content">	
+			<ul id="" class="list-unstyled">
+				{% for incidence in incidence_list %}		
+				<li {% if item.has_ticket %} class="unread" {% endif %}>
+					<a href="{{ incidence_detail_url }}?_={{ incidence.NU_incidencia }}">
+						{% if not item.has_ticket %}
+							<i class="mail-label" style="border-color: #EA4C89"></i>
+						{% endif %}
+						<div class="col-sender">
+							<div class="checkbox-custom checkbox-text-primary ib">
+								<input type="checkbox" id="mail_{{ incidence.NU_incidencia }}" {% if item.has_ticket %} checked disabled {% endif %}>
+								<label for="mail_{{ incidence.NU_incidencia }}"></label>
 							</div>
+							<p class="m-0 ib">{{ incidence.AF_nombre_reportador }}</p>
 						</div>
-					</div>
-				</div>
-			</header>
-			<!-- END: .mailbox-header -->
-		
-			<!-- START: .mailbox-actions -->
-			<div class="mailbox-actions">
-				<ul class="list-unstyled m-0 pt-3 pb-3">
-					<li class="ib mr-2">
-						<div class="btn-group">
-							<a href="#" class="item-action fas fa-chevron-down" data-toggle="dropdown"></a>
-		
-							<ul class="dropdown-menu" role="menu">
-								<li class="dropdown-item"><a class="dropdown-link" onclick="window.location.search = ''">Todas</a></li>
-								<li class="dropdown-item"><a class="dropdown-link" onclick="window.location.search = '?with_ticket'">Con Ticket</a></li>
-								<li class="dropdown-item"><a class="dropdown-link" onclick="window.location.search = '?without_ticket'">Sin Ticket</a></li>
-							</ul>
+						<div class="col-mail">
+							<p class="m-0 mail-content">
+								<span class="subject">{{ incidence.AF_titulo }}</span>
+							</p>
+							<p class="m-0 mail-date">{{ incidence.TI_fecha_creacion }}</p>
 						</div>
-					</li>
-					<li class="ib mr-2">
-						<a class="item-action fas fa-sync" onclick="window.location.search = '?reload'"></a>
-					</li>
-					<li class="ib mr-2">
-						<a class="item-action fas fa-archive" onclick="window.location.search = '?archived'"></a>
-					</li>
-				</ul>
-			</div>
-			<!-- END: .mailbox-actions -->
-		
-			{% if is_empty %}
-				{% include "not-found.html" %}
-			{% else %}
-			<div id="mailbox-email-list" class="mailbox-email-list">
-				<div class="nano">
-					<div class="nano-content">	
-						<ul id="" class="list-unstyled">
-							{% for incidence in incidence_list %}		
-							<li {% if item.has_ticket %} class="unread" {% endif %}>
-								<a href="{{ incidence_detail_url }}?_={{ incidence.NU_incidencia }}">
-									{% if not item.has_ticket %}
-										<i class="mail-label" style="border-color: #EA4C89"></i>
-									{% endif %}
-									<div class="col-sender">
-										<div class="checkbox-custom checkbox-text-primary ib">
-											<input type="checkbox" id="mail_{{ incidence.NU_incidencia }}" {% if item.has_ticket %} checked disabled {% endif %}>
-											<label for="mail_{{ incidence.NU_incidencia }}"></label>
-										</div>
-										<p class="m-0 ib">{{ incidence.AF_nombre_reportador }}</p>
-									</div>
-									<div class="col-mail">
-										<p class="m-0 mail-content">
-											<span class="subject">{{ incidence.AF_titulo }}</span>
-										</p>
-										<p class="m-0 mail-date">{{ incidence.TI_fecha_creacion }}</p>
-									</div>
-								</a>
-							</li>
-							{% endfor %}
-						</ul>
-						
-					</div>
-				</div>
-			</div>
-			{% endif %}
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
+			
 		</div>
 	</div>
-</section>
-
-<script>
-	const inputSearch = document.getElementById('input-search');
-
-	function search() {
-		if (inputSearch.value === '') {
-			window.location.search = ''
-		} else {
-			window.location.search = '?search=' + inputSearch.value;
-		}
-	}
-  
-	inputSearch.addEventListener('keyup', function(event) {
-	  if (event.key === 'Enter') {
-		search();
-	  }
-	});
-</script>
+</div>

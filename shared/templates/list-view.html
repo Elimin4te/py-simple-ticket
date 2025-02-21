@@ -1,0 +1,68 @@
+<section class="content-with-menu mailbox">
+	<div class="content-with-menu-container" data-mailbox data-mailbox-view="folder">
+		<div class="inner-body mailbox-folder" style="margin-left: 0px !important;">
+			<!-- START: .mailbox-header -->
+			<header class="mailbox-header">
+				<div class="row">
+					<div class="col-md-9">
+						<h1 class="mailbox-title font-weight-light m-0">
+							<a id="mailboxToggleSidebar" class="sidebar-toggle-btn trigger-toggle-sidebar">
+								<span class="line"></span>
+								<span class="line"></span>
+								<span class="line"></span>
+								<span class="line line-angle1"></span>
+								<span class="line line-angle2"></span>
+							</a>		
+							{{ list_title }}
+						</h1>
+					</div>
+					<div class="col-md-3">
+						<div>
+							<div class="input-group">
+								<input type="text" class="form-control" id="input-search" placeholder="{{ search_option_placeholder }}">
+								<span class="input-group-append">
+									<button class="btn btn-default" type="submit" onclick="search()"><i class="fas fa-search"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+			<!-- END: .mailbox-header -->
+		
+			<!-- START: .mailbox-actions -->
+			<div class="mailbox-actions">
+				<ul class="list-unstyled m-0 pt-3 pb-3">
+					{% if action_buttons_html %}
+						{{ action_buttons_html }}
+					{% endif %}
+				</ul>
+			</div>
+			<!-- END: .mailbox-actions -->
+		
+			{% if is_empty %}
+				{% include "empty-search.html" %}
+			{% else %}
+				{{ list_html }}
+			{% endif %}
+		</div>
+	</div>
+</section>
+
+<script>
+	const inputSearch = document.getElementById('input-search');
+
+	function search() {
+		if (inputSearch.value === '') {
+			window.location.search = ''
+		} else {
+			window.location.search = '?search=' + inputSearch.value;
+		}
+	}
+  
+	inputSearch.addEventListener('keyup', function(event) {
+	  if (event.key === 'Enter') {
+		search();
+	  }
+	});
+</script>

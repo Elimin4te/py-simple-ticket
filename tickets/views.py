@@ -6,7 +6,7 @@ from flask.templating import render_template
 from flask_login import current_user, login_required
 
 from configuration import INDEX_URL, LOGIN_VIEW
-from shared.views import render_into_index
+from shared.views import render_list_view
 from shared.menu import app_menu, MenuEntry
 from shared.engine import session
 
@@ -44,11 +44,20 @@ class IncidenceView(MethodView):
 
         content = render_template(
             'incidences.html', 
-            incidences=incidence_list, 
-            is_empty=len(incidence_list) == 0,
+            incidences=incidence_list,
             incidence_detail_url=INCIDENCE_DETAIL_URL
         )
-        return render_into_index(content, "Incidencias", "incidences")
+
+        buttons = render_template("incidence-action-buttons.html")
+
+        return render_list_view(
+            content, 
+            list_title = "Listado de Incidencias",
+            page_title = "Incidencias",
+            action_buttons_html = buttons,
+            is_empty = len(incidence_list) == 0,
+            active_menu_item = "incidences"
+        )
 
 
 tickets_bp.add_url_rule(

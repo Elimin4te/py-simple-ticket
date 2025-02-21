@@ -109,7 +109,7 @@
 							<ul class="nav nav-main">
 								{% for item in menu.entries %}
 									<li class="{% if item.childrens|length > 0 %}nav-parent{% endif %} {% if item.is_active %}nav-active{% endif %}">
-										<a class="nav-link" href="{{ item.href }}" id="menu-{{ item.tag }}">
+										<a class="nav-link" {% if item.childrens|length > 0 %} href="{{ item.href }}" {% endif %} id="menu-{{ item.tag }}">
 											<i class="fas {{ item.icon }}" aria-hidden="true"></i>
 											<span>{{ item.title }}</span>
 										</a>
