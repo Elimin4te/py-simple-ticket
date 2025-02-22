@@ -45,10 +45,10 @@ class ReadController(BaseModelController):
 
         return tuple(val[0] for val in self.session.execute(statement).unique())
 
-    def filter(self, *args, **criteria) -> tuple[T]:
+    def filter(self, *args, order_by: str = None, **criteria) -> tuple[T]:
         """ Filter the registries using the specified criteria, where args is used for sqlalchemy field expressions and kwargs used for filter_by expressions. """
-
-        return tuple(val[0] for val in self.session.execute(self.select().filter_by(**criteria).filter(*args)).unique())
+        expression = self.select().order_by(order_by).filter_by(**criteria).filter(*args)
+        return tuple(val[0] for val in self.session.execute(expression).unique())
 
 
 class DeleteController(BaseModelController): # Inherits from read controller for filtering.

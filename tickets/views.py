@@ -7,7 +7,8 @@ from tickets.controllers.incidence import (
     IncidenceListView
 )
 from tickets.controllers.ticket import (
-    TicketListView
+    TicketListView,
+    TicketCreateView
 )
 from tickets.controllers.task import (
     TaskListView
@@ -25,6 +26,7 @@ tickets_bp = Blueprint('tickets', __name__, template_folder='templates')
 IncidenceListView().register_in_app(tickets_bp)
 
 TicketListView().register_in_app(tickets_bp)
+TicketCreateView().register_in_app(tickets_bp)
 
 TaskListView().register_in_app(tickets_bp)
 
@@ -54,7 +56,7 @@ app_menu.add_entry(
         position=30,
         childs=(
             MenuChild("Listado", TicketListView.url),
-            MenuChild("Crear", INDEX_URL)
+            MenuChild("Crear", TicketCreateView.url)
         )
     )
 )
@@ -78,7 +80,7 @@ app_menu.add_entry(
         'add_ticket',
         'Crear Ticket',
         'fa-plus',
-        INDEX_URL,
+        TicketCreateView.url,
         'soporte.tickets',
         20
     )

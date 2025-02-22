@@ -38,4 +38,11 @@ class Categoria(Base, _Common, IsActiveMixin):
     def validate_hierarchy(self, key, value):
         assert 10 > value > 0, "El nivel de jerarquía debe ser al menos de 1 y máximo de 9." 
         return value
+
+    @property
+    def authorative_name(self):
+        if self.AF_codigo_categoria_padre:
+            return f"{self.categoria_padre.authorative_name} -> {self.AF_nombre}"
+        else:
+            return f"{self.AF_nombre}"
         

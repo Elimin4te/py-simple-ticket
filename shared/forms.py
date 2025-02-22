@@ -12,7 +12,6 @@ def form_name_validator(form, field: Field):
 required_string = lambda name, *validators: StringField(name, validators=[DataRequired(), *validators])
 required_int = lambda name, *validators: IntegerField(name, validators=[DataRequired(), *validators])
 
-
 class CommonEntityFormMixin:
     AF_codigo = required_string("Código", form_code_validator)
     AF_nombre = required_string("Nombre", form_name_validator)

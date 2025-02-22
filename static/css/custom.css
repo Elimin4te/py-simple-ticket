@@ -3,3 +3,8 @@
 div img.logo {
     margin-bottom: -100px;
 }
+
+.mailbox .mailbox-email-list .col-mail .mail-date {
+    padding-left: 0px;
+    width: auto;
+}

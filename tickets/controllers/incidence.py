@@ -94,20 +94,26 @@ class IncidenceListView(ListView):
         all_incidences = not (with_ticket or without_ticket)
         search_params = request.args.get('search')
 
-        filtering_kwargs = {}
+        has_ticket = None
         filtering_args = []
 
         if not all_incidences:
-            filtering_kwargs['has_ticket'] = True if with_ticket else False
+            has_ticket = True if with_ticket else False
 
         if search_params:
-            filtering_args.append(
-                Incidencia.AF_descripcion.like("%" + search_params + "%"))
+            statement = Incidencia.AF_descripcion.ilike("%" + search_params + "%")
+            filtering_args.append(statement)
 
-        incidence_list = self.controller.filter(
-            *filtering_args, **filtering_kwargs)
+        incidence_list = self.controller.filter(order_by='NU_incidencia', *filtering_args)
+        
+        if has_ticket is not None:
+            incidence_list = tuple(filter(lambda i: i.has_ticket == has_ticket, incidence_list))
+        
         if len(incidence_list) == 0:
             return None
+
+        for incidence in incidence_list:
+            incidence.TI_fecha_creacion = format(incidence.TI_fecha_creacion, r'%Y-%m-%d %H:%M')
 
         content = render_template(
             'incidence/list.html',

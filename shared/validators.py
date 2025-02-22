@@ -10,7 +10,7 @@ def name_validator(name: str, field_name: str = None):
 
     return name.strip()
 
-def code_validator(code: str, field_name: str = None, check_for: str = "@#$%^&*¡!¿?=+-[]{}/\\"):
+def code_validator(code: str, field_name: str = None, check_for: str = "@#$%^&*¡!¿?=+[]{}/\\"):
 
     title = "código" or field_name
     assert ' ' not in code, f"El {title} no puede contener espacios."

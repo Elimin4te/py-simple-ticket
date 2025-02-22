@@ -2,15 +2,15 @@
 	<div class="nano">
 		<div class="nano-content">	
 			<ul id="" class="list-unstyled">
-				{% for incidence in incidence_list %}		
-				<li {% if item.has_ticket %} class="unread" {% endif %}>
+				{% for incidence in incidences %}		
+				<li {% if incidence.has_ticket %} class="unread" {% endif %}>
 					<a href="{{ incidence_detail_url }}?_={{ incidence.NU_incidencia }}">
-						{% if not item.has_ticket %}
+						{% if not incidence.has_ticket %}
 							<i class="mail-label" style="border-color: #EA4C89"></i>
 						{% endif %}
 						<div class="col-sender">
 							<div class="checkbox-custom checkbox-text-primary ib">
-								<input type="checkbox" id="mail_{{ incidence.NU_incidencia }}" {% if item.has_ticket %} checked disabled {% endif %}>
+								<input type="checkbox" id="mail_{{ incidence.NU_incidencia }}" {% if incidence.has_ticket %} checked {% endif %} disabled>
 								<label for="mail_{{ incidence.NU_incidencia }}"></label>
 							</div>
 							<p class="m-0 ib">{{ incidence.AF_nombre_reportador }}</p>

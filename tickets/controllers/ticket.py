@@ -2,13 +2,27 @@ from shared.controllers.audited import AuditedModelController
 from shared.controllers.mixins import ArchiveActionMixin
 
 from tickets.models import Ticket
+from tickets.models.ticket import STATUS_OPTS
+
 from auth.models import Usuario
+from auth.controllers.user import UserController
+
+from tickets.controllers.priority import PriorityController
+from tickets.controllers.incidence import IncidenceController
+from tickets.controllers.category import CategoryController
+
 
 from datetime import datetime
 from configuration.settings import TIMEZONE
 
-from flask_login import login_required
-from shared.views import ListView
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, StringField, SelectField, BooleanField
+
+from flask import request, render_template, redirect
+from flask_login import login_required, current_user
+
+from shared.views import ListView, FormView
+from shared.forms import required_string
 from shared.engine import session
 
 TICKET_LIST_URL = '/tickets'
@@ -34,6 +48,19 @@ class TicketController(AuditedModelController[Ticket], ArchiveActionMixin):
         return self.update(instance, AF_estatus=status)
 
 
+class TicketValidationForm(FlaskForm):
+    NU_ticket = IntegerField("Número de Ticket")
+    AF_titulo = required_string("Título")
+    AF_descripcion = required_string("Descripción")
+    AF_estatus = SelectField("Estatus", choices=STATUS_OPTS)
+    NU_incidencia = required_string("Incidencia")
+    AF_codigo_categoria = required_string("Categoría")
+    AF_codigo_prioridad = required_string("Prioridad")
+    AF_analista_asignado = StringField("Analista de Soporte")
+    BO_archivado = BooleanField("Archivado")
+    AF_motivo_archivado = StringField("Motivo de Archivado")
+
+
 class TicketListView(ListView):
     decorators = [login_required]
 
@@ -46,4 +73,38 @@ class TicketListView(ListView):
 
     controller = TicketController(session)
     url = TICKET_LIST_URL
+
+
+class TicketCreateView(FormView):
+
+    validation_form = TicketValidationForm
+    form_title = "Crear Ticket"
+    page_title = "Tickets"
+    active_menu_item = "tickets"
+
+    methods = "GET", "POST"
+    controller = TicketController(session, current_user)
+    url = TICKET_ADD_URL
+
+    def on_valid(self):
+        instance = Ticket(**self.form_data)
+        self.controller.create(instance)
+        return redirect(TICKET_LIST_URL)
+
+    def get_form_html(self) -> str:
+
+        # Load required FKs
+        priorities = PriorityController(session).all()
+        incidences = IncidenceController(session).all('NU_incidencia')
+        incidences = tuple(filter(lambda i: not i.BO_archivado and not i.has_ticket, incidences))
+        categories = CategoryController(session).filter(BO_activo=True)
+        analists   = UserController(session).filter(AF_codigo_rol="ASPR", BO_activo=True)
+
+        return render_template(
+            "ticket/form.html",
+            priorities = priorities,
+            incidences = incidences,
+            categories = categories,
+            analists   = analists
+        )
 

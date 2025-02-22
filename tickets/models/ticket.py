@@ -20,13 +20,16 @@ from documents.models import (
 from tickets.models import Categoria, Prioridad, Incidencia
 from auth.models import Usuario
 
-
-ESTATUS = Enum(
+STATUS_OPTS = [
     "Nuevo",
     "Asignado",
     "En Curso",
     "Resuelto",
-    "Cerrado",
+    "Cerrado"
+]
+
+ESTATUS = Enum(
+    *STATUS_OPTS,
     name="estatus_tickets",
     create_type=True
 )
