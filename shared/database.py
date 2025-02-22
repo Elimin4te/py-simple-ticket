@@ -106,7 +106,7 @@ def get_common_entity_mixin(code_length: int = 4, name_length: int = 16, descrip
             return code_validator(value)
 
         @validates('AF_nombre')
-        def validate_code(self, key, value):
+        def validate_name(self, key, value):
             return name_validator(value)
     
     return CommonEntityMixin
@@ -123,3 +123,5 @@ class ArchivableMixin():
     def validate_reason(self, key, value):
         if value:
             return length_validator(value, 32, 256, "El Motivo de Archivado")
+
+

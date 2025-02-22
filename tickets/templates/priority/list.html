@@ -1,0 +1,30 @@
+<section class="card">
+    <div class="card-body">
+        <table class="table table-responsive-md mb-0" style="text-align: center; font-size: medium;">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Color (Hex)</th>
+                    <th>Orden de Prioridad</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for priority in priorities %}
+                <tr>
+                    <td>{{ priority.AF_codigo }}</td>
+                    <td>{{ priority.AF_descripcion }}</td>
+                    <td style="background-color: {{ priority.AF_color }}; font-weight: 600;">{{ priority.AF_color }}</td>
+                    <td>{{ priority.NU_prioridad }}</td>
+                    <td>
+                        <a href="{{ edit_url }}?_={{ priority.AF_codigo }}">
+                            <i class="fas fa-edit" style="color: #194d80;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>

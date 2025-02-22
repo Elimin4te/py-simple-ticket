@@ -124,7 +124,7 @@ app_menu.add_entry(
         'Gestionar Usuarios', 
         'fa-user', 
         breadcrumbs='autenticación.usuarios', 
-        position=50,
+        position=100,
         childs=(
             MenuChild("Listado", USER_LIST_URL),
             MenuChild("Crear", USER_ADD_URL)

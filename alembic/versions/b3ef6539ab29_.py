@@ -52,7 +52,6 @@ def upgrade() -> None:
     sa.Column('AF_color', sa.String(length=16), nullable=False),
     sa.Column('NU_prioridad', sa.Integer(), nullable=False),
     sa.Column('AF_codigo', sa.String(length=16), nullable=False),
-    sa.Column('AF_nombre', sa.String(), nullable=False),
     sa.Column('AF_descripcion', sa.String(length=128), nullable=False),
     sa.PrimaryKeyConstraint('AF_codigo'),
     sa.UniqueConstraint('AF_color'),

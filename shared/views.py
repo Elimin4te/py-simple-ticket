@@ -1,4 +1,4 @@
-from flask import make_response, request, Response
+from flask import make_response, Response, Blueprint, Flask
 from jinja2 import FileSystemLoader, Environment
 
 from flask_login import current_user
@@ -66,18 +66,32 @@ def render_list_view(
     )
 
 
-class ListView(MethodView):
+class View(MethodView):
+
+    url: str = None
+    methods: tuple = "GET",
+    page_title: str = None
+    active_menu_item: str = None
+    """If declared, overrides the list_title attribute and sets a different navigator tab title."""
+
+    def register_in_app(self, app: Blueprint | Flask):
+        """ Register this view in the app url rules. """
+        app.add_url_rule(
+            rule = self.url, 
+            view_func = self.as_view(self.__class__.__name__.lower()), 
+            methods = self.methods
+        )
+
+
+class ListView(View):
     """Generic GET-only List View"""
 
     list_title: str
     list_html: str = None
     """If declared, overrides the get_list_html method."""
-    page_title: str = None
-    """If declared, overrides the list_title attribute and sets a different navigator tab title."""
     search_option_placeholder: str = "Buscar por descripción..."
     action_buttons_html: str = None
     """If declared, overrides the get_action_buttons_html method."""
-    active_menu_item: str = None
     hide_search_bar: bool = False
     force_empty: bool = False
     """If True, view will always be rendered in empty-search mode."""
@@ -142,7 +156,7 @@ def render_form_view(
     )
 
         
-class FormView(MethodView):
+class FormView(View):
     """Generic form get and post view with validation."""
 
     validation_form: FlaskForm
@@ -151,11 +165,14 @@ class FormView(MethodView):
     form_title: str
     form_html: str = None
     """If declared, overrides the get_form_html method."""
-    page_title: str = None
-    """If declared, overrides the list_title attribute and sets a different navigator tab title."""
     action_link: str = "#"
     """Default form's action link."""
-    active_menu_item: str = None
+
+    form_data = None
+    """Container for the form data which will be filled if the form is valid."""
+
+    instanciated_form = None
+    """Container for the form instance which will be filled when the post method is called."""
 
     def on_valid(self) -> Response:
         """Inheritable method that executed an action when the form post was valid, should return a Response."""
@@ -168,10 +185,11 @@ class FormView(MethodView):
     def get_first_error(self, error_dict: dict[str, str]) -> str:
         """Returns the first error of the form errors as a string."""
         first_key = str(tuple(error_dict.keys())[0])
+        first_label = getattr(self.instanciated_form, first_key).label
         err = error_dict[first_key]
         if isinstance(err, list):
             err = err[0]
-        return err
+        return f"{first_label}: {err}"
 
     def render(self, form_error: str = None):
         """Resolves all methods and parameters and returns the rendered view."""
@@ -193,8 +211,11 @@ class FormView(MethodView):
     def post(self):
 
         form = self.validation_form()
+        self.instanciated_form = form
 
         if form.validate():
+            self.form_data: dict = form.data
+            self.form_data.pop('csrf_token')
             return self.on_valid()
 
         form_error = self.get_first_error(form.errors)

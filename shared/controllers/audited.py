@@ -49,7 +49,7 @@ class AuditedModelController(ModelController[T], Generic[T]):
 
             old_value = str(getattr(instance, key))
             new_value = str(value)
-            assert not (old_value == new_value), "El valor nuevo no puede ser igual al anterior."
+            if old_value == new_value: continue
 
             trace = Auditoria(
                 AF_tabla=self.model.__tablename__,

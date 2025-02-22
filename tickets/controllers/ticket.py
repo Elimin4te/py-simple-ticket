@@ -7,6 +7,13 @@ from auth.models import Usuario
 from datetime import datetime
 from configuration.settings import TIMEZONE
 
+from flask_login import login_required
+from shared.views import ListView
+from shared.engine import session
+
+TICKET_LIST_URL = '/tickets'
+TICKET_ADD_URL = '/tickets/add'
+
 class TicketController(AuditedModelController[Ticket], ArchiveActionMixin):
     
     model = Ticket
@@ -25,3 +32,18 @@ class TicketController(AuditedModelController[Ticket], ArchiveActionMixin):
         ### Notificacion automatica...
 
         return self.update(instance, AF_estatus=status)
+
+
+class TicketListView(ListView):
+    decorators = [login_required]
+
+    list_html = ""
+    list_title = "Listado de Tickets"
+    page_title = "Tickets"
+    search_option_placeholder = "Buscar por título..."
+    active_menu_item = "tickets"
+    force_empty = True
+
+    controller = TicketController(session)
+    url = TICKET_LIST_URL
+
