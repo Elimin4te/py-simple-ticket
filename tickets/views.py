@@ -18,6 +18,9 @@ from tickets.controllers.priority import (
     PriorityCreateView, 
     PriorityEditView
 )
+from tickets.controllers.category import (
+    CategoryListView
+)
 
 tickets_bp = Blueprint('tickets', __name__, template_folder='templates')
 
@@ -33,6 +36,8 @@ TaskListView().register_in_app(tickets_bp)
 PriorityListView().register_in_app(tickets_bp)
 PriorityCreateView().register_in_app(tickets_bp)
 PriorityEditView().register_in_app(tickets_bp)
+
+CategoryListView().register_in_app(tickets_bp)
 
 # --------- Menu Entries
 
@@ -94,7 +99,7 @@ app_menu.add_entry(
         breadcrumbs='soporte.tickets.categorias',
         position=50,
         childs=(
-            MenuChild("Listado", INDEX_URL),
+            MenuChild("Listado", CategoryListView.url),
             MenuChild("Crear", INDEX_URL)
         )
     )
