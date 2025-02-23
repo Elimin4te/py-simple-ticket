@@ -11,7 +11,7 @@ class IncidenceFactory(SQLAlchemyModelFactory):
         sqlalchemy_session = session
         sqlalchemy_session_persistence = 'commit'
 
-    AF_titulo = Faker('sentence')
-    AF_descripcion = Faker('text')
-    AF_nombre_reportador = Faker('name')
-    AF_correo_reportador = Faker('email')
+    AF_titulo = Faker('sentence', locale='es_MX')
+    AF_descripcion = Faker('text', locale='es_MX')
+    AF_nombre_reportador = Faker('name', locale='es_MX')
+    AF_correo_reportador = Faker('email', locale='es_MX')

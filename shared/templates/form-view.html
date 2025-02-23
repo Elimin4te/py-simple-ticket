@@ -1,8 +1,14 @@
 <div class="row">
 	<div class="col">
 		<section class="card">
-			<header class="card-header">
-				<h2 class="card-title">{{ form_title }}</h2>
+			<header class="card-header d-flex" style="align-items: center;">
+				{% if back_to %}
+				<a class="ib mr-2" onclick="window.location ='{{ back_to }}'">
+					<i class="fas fa-arrow-circle-left" style="font-size: 20px; cursor: pointer;"></i>
+				</a>
+				{% endif %}
+				<h2 class="card-title ib">{{ form_title }}</h2>
+				{{ helper_buttons_html or '' }}
 			</header>
 			<div class="card-body">
 				<div class="alert alert-danger {% if form_error %}d-block{% else %}d-none{% endif %}" role="alert">
@@ -14,7 +20,6 @@
 					<footer class="card-footer">
 						<div class="row justify-content-end">
 							<div>
-								<button type="reset" class="btn btn-default">Borrar</button>
 								<button class="btn btn-primary ml-2">Enviar</button>
 							</div>
 						</div>

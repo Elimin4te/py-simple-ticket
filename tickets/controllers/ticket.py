@@ -22,7 +22,7 @@ from flask import request, render_template, redirect
 from flask_login import login_required, current_user
 
 from shared.views import ListView, FormView
-from shared.forms import required_string
+from shared.forms import required_string, ArchivableFormMixin
 from shared.engine import session
 
 TICKET_LIST_URL = '/tickets'
@@ -48,7 +48,7 @@ class TicketController(AuditedModelController[Ticket], ArchiveActionMixin):
         return self.update(instance, AF_estatus=status)
 
 
-class TicketValidationForm(FlaskForm):
+class TicketValidationForm(FlaskForm, ArchivableFormMixin):
     NU_ticket = IntegerField("Número de Ticket")
     AF_titulo = required_string("Título")
     AF_descripcion = required_string("Descripción")
@@ -57,8 +57,6 @@ class TicketValidationForm(FlaskForm):
     AF_codigo_categoria = required_string("Categoría")
     AF_codigo_prioridad = required_string("Prioridad")
     AF_analista_asignado = StringField("Analista de Soporte")
-    BO_archivado = BooleanField("Archivado")
-    AF_motivo_archivado = StringField("Motivo de Archivado")
 
 
 class TicketListView(ListView):
@@ -85,11 +83,11 @@ class TicketCreateView(FormView):
     methods = "GET", "POST"
     controller = TicketController(session, current_user)
     url = TICKET_ADD_URL
+    redirect_to = TICKET_LIST_URL
 
     def on_valid(self):
         instance = Ticket(**self.form_data)
         self.controller.create(instance)
-        return redirect(TICKET_LIST_URL)
 
     def get_form_html(self) -> str:
 

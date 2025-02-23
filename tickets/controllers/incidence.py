@@ -1,5 +1,7 @@
 import os.path
 
+from datetime import datetime
+
 from google.auth.transport.requests import Request
 from google.oauth2 import credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -7,21 +9,26 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from shared.controllers.audited import AuditedModelController
+from shared.controllers.mixins import ArchiveActionMixin
 from tickets.models import Incidencia
 
-from flask import request
+from flask import request, redirect
 from flask.templating import render_template
 
-from flask_login import login_required
+from flask_login import login_required, current_user
 
-from configuration import INDEX_URL
-from shared.views import ListView
+from flask_wtf import FlaskForm
+
+from configuration import INDEX_URL, TIMEZONE
+from shared.forms import ArchivableFormMixin
+from shared.views import ListView, FormView, handle_archiving
 from shared.engine import session
 
 
 INCIDENCE_DETAIL_URL = '/incidences/detail'
 
-class IncidenceController(AuditedModelController[Incidencia]):
+
+class IncidenceController(AuditedModelController[Incidencia], ArchiveActionMixin):
     
     model = Incidencia
     model_pk_field = 'NU_incidencia'
@@ -73,6 +80,10 @@ class IncidenceSyncController:
             print(f'An error occurred: {error}')
 
 
+class IncidenceValidationForm(FlaskForm, ArchivableFormMixin):
+    pass
+
+
 class IncidenceListView(ListView):
 
     decorators = [login_required]
@@ -91,15 +102,25 @@ class IncidenceListView(ListView):
 
         with_ticket = 'with_ticket' in request.args.keys()
         without_ticket = 'without_ticket' in request.args.keys()
-        all_incidences = not (with_ticket or without_ticket)
+        archived = 'archived' in request.args.keys()
+        all_incidences = not (with_ticket or without_ticket or archived)
         search_params = request.args.get('search')
 
         has_ticket = None
         filtering_args = []
 
         if not all_incidences:
-            has_ticket = True if with_ticket else False
 
+            if archived:
+                self.list_title = f"{self.list_title} (Archivadas)"
+                filtering_args.append(Incidencia.BO_archivado == True)
+
+            else:
+                has_ticket = True if with_ticket else False
+                self.list_title = f"{self.list_title} ({'Con Ticket' if has_ticket else 'Sin Ticket'})"
+                filtering_args.append(Incidencia.BO_archivado == False)
+
+        
         if search_params:
             statement = Incidencia.AF_descripcion.ilike("%" + search_params + "%")
             filtering_args.append(statement)
@@ -122,6 +143,48 @@ class IncidenceListView(ListView):
         )
 
         return content
+
+
+class IncidenceEditView(FormView):
+
+    validation_form = IncidenceValidationForm
+    form_title = "Detalle de Incidencia"
+    page_title = "Incidencias"
+    active_menu_item = "incidences"
+
+    methods = "GET", "POST"
+    controller = IncidenceController(session, current_user)
+    url = INCIDENCE_DETAIL_URL
+    redirect_to = INDEX_URL + '?without_ticket'
+    edit_mode = True
+    instance: Incidencia = None
+
+    back_button = True
+
+    def on_valid(self):
+
+        handle_archiving(self)
+        self.controller.update(self.instance, **self.form_data)
+        return redirect(INDEX_URL + '?without_ticket')
+
+    def get_helper_buttons_html(self) -> str | None:
+        
+        if not self.instance.has_ticket:
+            create_ticket_url = f'/tickets/add?incidence={self.instance.NU_incidencia}'
+            return render_template('incidence/helper-buttons.html', create_ticket_url=create_ticket_url)
+
+    def get_form_html(self) -> str:
+
+        obj = self.instance
+        self.form_title = f"Detalle Incidencia - #{obj.NU_incidencia}"
+
+        obj.TI_fecha_creacion = format(obj.TI_fecha_creacion, r'%Y-%m-%d %H:%M')
+
+        if obj.TI_fecha_archivado:
+            obj.TI_fecha_archivado = format(obj.TI_fecha_archivado, r'%Y-%m-%d %H:%M')
+
+        return render_template("incidence/form.html", obj=obj)
+
 
 
 

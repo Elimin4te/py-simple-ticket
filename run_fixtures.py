@@ -13,7 +13,7 @@ SupportRoleFactory.create()
 
 # -------- Users
 DefaultAdminUserFactory.create()
-AnalistUserFactory.create_batch(3)
+AnalistUserFactory.create()
 
 # -------- Incidences
 IncidenceFactory.create_batch(8)

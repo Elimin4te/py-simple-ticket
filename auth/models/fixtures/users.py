@@ -37,11 +37,11 @@ class SupervisorUserFactory(SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = 'commit'
         sqlalchemy_get_or_create = ('AF_alias',)
 
-    AF_alias = Faker("user_name")
+    AF_alias = Faker("user_name", locale='es_MX')
     NU_cedula = LazyAttribute(lambda obj: generate_document())
-    AF_nombre = Faker("first_name")
-    AF_apellido = Faker("last_name")
-    AF_correo = Faker("email")
+    AF_nombre = Faker("first_name", locale='es_MX')
+    AF_apellido = Faker("last_name", locale='es_MX')
+    AF_correo = Faker("email", locale='es_MX')
     AF_codigo_rol = "SPVS"
     AF_contraseña = default_password
 
@@ -54,11 +54,11 @@ class AnalistUserFactory(SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = 'commit'
         sqlalchemy_get_or_create = ('AF_alias',)
 
-    AF_alias = Faker("user_name")
+    AF_alias = Faker("user_name", locale='es_MX')
     NU_cedula = LazyAttribute(lambda obj: generate_document())
-    AF_nombre = Faker("first_name")
-    AF_apellido = Faker("last_name")
-    AF_correo = Faker("email")
+    AF_nombre = Faker("first_name", locale='es_MX')
+    AF_apellido = Faker("last_name", locale='es_MX')
+    AF_correo = Faker("email", locale='es_MX')
     AF_codigo_rol = "ASPR"
     AF_contraseña = default_password
     AF_usuario_supervisor = LazyAttribute(lambda obj: SupervisorUserFactory().AF_alias)

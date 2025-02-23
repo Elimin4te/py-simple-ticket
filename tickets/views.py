@@ -4,7 +4,8 @@ from configuration import INDEX_URL
 from shared.menu import app_menu, MenuEntry, MenuChild
 
 from tickets.controllers.incidence import (
-    IncidenceListView
+    IncidenceListView,
+    IncidenceEditView
 )
 from tickets.controllers.ticket import (
     TicketListView,
@@ -27,6 +28,7 @@ tickets_bp = Blueprint('tickets', __name__, template_folder='templates')
 # --------- URL Registries
 
 IncidenceListView().register_in_app(tickets_bp)
+IncidenceEditView().register_in_app(tickets_bp)
 
 TicketListView().register_in_app(tickets_bp)
 TicketCreateView().register_in_app(tickets_bp)
@@ -46,7 +48,7 @@ app_menu.add_entry(
         'incidences',
         'Incidencias',
         'fa-bell',
-        INDEX_URL,
+        f"{INDEX_URL}?without_ticket",
         'soporte.incidencias',
         10
     )
