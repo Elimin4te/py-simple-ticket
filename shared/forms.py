@@ -26,8 +26,10 @@ def archiving_reason_validator(form, field: Field):
     """Validates that there's a motive if archiving and also validates the motive length"""
     motive = form.AF_motivo_archivado.data
     has_motive = motive is not None and motive.strip() != ''
-    assert form.BO_archivado and has_motive, 'Se debe establecer un motivo de manera obligatoria al archivar.'
-    length_validator(field.data, 32, 256, "El motivo de archivado")
+
+    if form.BO_archivado.data:
+        assert has_motive, 'Se debe establecer un motivo de manera obligatoria al archivar.'
+        length_validator(field.data, 32, 256, "El motivo de archivado")
 
 
 required_string = lambda name, *validators: StringField(name, validators=[DataRequired(), *validators])

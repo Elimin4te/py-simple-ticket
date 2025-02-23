@@ -119,9 +119,4 @@ class ArchivableMixin():
     AF_motivo_archivado: NullableString = nullable_string(256)
     TI_fecha_archivado: NullableDatetime = nullable_datetime()
 
-    @validates('AF_motivo_archivado')
-    def validate_reason(self, key, value):
-        if value:
-            return length_validator(value, 32, 256, "El Motivo de Archivado")
-
 

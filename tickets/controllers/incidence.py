@@ -1,7 +1,5 @@
 import os.path
 
-from datetime import datetime
-
 from google.auth.transport.requests import Request
 from google.oauth2 import credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -19,7 +17,7 @@ from flask_login import login_required, current_user
 
 from flask_wtf import FlaskForm
 
-from configuration import INDEX_URL, TIMEZONE
+from configuration import INDEX_URL
 from shared.forms import ArchivableFormMixin
 from shared.views import ListView, FormView, handle_archiving
 from shared.engine import session
