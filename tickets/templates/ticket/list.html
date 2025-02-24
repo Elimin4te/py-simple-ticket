@@ -16,12 +16,16 @@
             </thead> 
             <tbody>
                 {% for obj in objects %}
-                <tr>
-                    <td>{{ obj.NU_ticket }}</td>
+                <tr {% if obj.BO_archivado %} style="color: red" {% endif %}>
+                    <td>
+                        {{ obj.NU_ticket }}
+                    </td>
                     <td>{{ obj.AF_titulo }}</td>
                     <td>{{ obj.AF_estatus }}</td>
                     <td>{{ obj.categoria.authorative_name }}</td>
-                    <td style="background-color: {{ obj.prioridad.AF_color }}; font-weight: 600;">{{ obj.prioridad.AF_codigo }}</td>
+                    <td style="background-color: {{ obj.prioridad.AF_color }}; font-weight: 600; color: black !important;">
+                        {{ obj.prioridad.AF_codigo }}
+                    </td>
                     <td>{{ obj.analista_asignado.AF_alias or 'Sin Asignar'}}</td>
                     <td>{{ obj.TI_fecha_asignacion or 'N.A' }}</td>
                     <td>

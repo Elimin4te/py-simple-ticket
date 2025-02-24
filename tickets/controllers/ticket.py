@@ -20,7 +20,7 @@ from wtforms import IntegerField, StringField, SelectField
 from flask import request, render_template
 from flask_login import login_required, current_user
 
-from shared.views import ListView, FormView
+from shared.views import ListView, FormView, handle_archiving
 from shared.forms import required_string, ArchivableFormMixin, format_obj_dates, sanitize_url_filter
 from shared.engine import session
 
@@ -85,8 +85,14 @@ class TicketListView(ListView):
 
         # Sanitize filters
         
-        filter_set = sanitize_url_filter(Ticket, request)
-        objects = self.controller.filter(order_by='NU_ticket', **filter_set)
+        filter_set = {'BO_archivado': False}
+        filter_set.update(sanitize_url_filter(Ticket, request))
+        search_str = request.args.get('search') or ''
+        objects = self.controller.filter(
+            Ticket.AF_titulo.ilike('%'+search_str+'%'), 
+            order_by='NU_ticket', 
+            **filter_set
+        )
         if len(objects) == 0: return None
 
         for obj in objects: format_obj_dates(obj)
@@ -159,7 +165,12 @@ class TicketDetailView(TicketCreateView):
 
         update_kwargs = self.form_data
         if self.form_data.get('AF_analista_asignado'):
-            update_kwargs['TI_fecha_asignacion'] = datetime.now(TIMEZONE)
+            if self.form_data.get('AF_analista_asignado') != self.instance.AF_analista_asignado:
+                update_kwargs['TI_fecha_asignacion'] = datetime.now(TIMEZONE)
+        else:
+            update_kwargs['TI_fecha_asignacion'] = None
+
+        handle_archiving(self)
 
         self.controller.update(self.instance, **update_kwargs)
 
