@@ -1,0 +1,30 @@
+<section class="card">
+    <div class="card-body">
+        <table class="table table-responsive-md mb-0" style="text-align: center; font-size: medium;">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Jerarquía</th>
+                    <th>Descripción</th>
+                    <th>Nivel Jerarquía</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in objects %}
+                <tr {% if not obj.BO_activo %} style="color: red;" {% endif %}>
+                    <td>{{ obj.AF_nombre }}</td>
+                    <td>{{ obj.authorative_name }}</td>
+                    <td>{{ obj.AF_descripcion }}</td>
+                    <td>{{ obj.NU_nivel_jerarquia }}</td>
+                    <td>
+                        <a href="{{ edit_url }}?_={{ obj.AF_codigo }}">
+                            <i class="fas fa-edit" style="color: #194d80;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
