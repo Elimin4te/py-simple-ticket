@@ -17,11 +17,9 @@
 				<form class="form-horizontal form-bordered" action="{{ action_link }}" method="post">
 					<input id="csrf_token" name="csrf_token" type="hidden" value="{{ form_csrf }}">
 					{{ form_html }}
-					<footer class="card-footer">
+					<footer class="card-footer pb-0">
 						<div class="row justify-content-end">
-							<div>
 								<button class="btn btn-primary ml-2">Enviar</button>
-							</div>
 						</div>
 					</footer>
 				</form>

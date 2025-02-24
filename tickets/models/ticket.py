@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship, backref
 from shared.database import (
     Base,
     ArchivableMixin, 
-    Id, generic_id,
+    NULL, Id, generic_id,
     NullableDatetime, nullable_datetime,
     CommonString, common_string,
     CommonDatetime, common_datetime
@@ -74,7 +74,9 @@ class Ticket(Base, ArchivableMixin):
 
     # ---- Assigned User
 
-    AF_analista_asignado: Mapped[str] = mapped_column(ForeignKey('Usuarios.AF_alias'))
+    AF_analista_asignado: Mapped[str] = mapped_column(
+        ForeignKey('Usuarios.AF_alias'), default=NULL, nullable=True
+    )
     analista_asignado: Mapped[Usuario] = relationship(
         remote_side=[Usuario.AF_alias],
         backref=backref('assigned_tickets', lazy='joined')

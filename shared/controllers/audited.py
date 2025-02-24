@@ -47,8 +47,8 @@ class AuditedModelController(ModelController[T], Generic[T]):
 
         for key, value in updating_fields.items():
 
-            old_value = getattr(instance, key)
-            new_value = value
+            old_value = str(getattr(instance, key))[:128]
+            new_value = str(value)[:128]
             if old_value == new_value: continue
 
             trace = Auditoria(
@@ -56,8 +56,8 @@ class AuditedModelController(ModelController[T], Generic[T]):
                 AF_accion="Modificar",
                 AF_id_registro=self.get_instance_pk(instance),
                 AF_campo_modificado=key,
-                AF_valor_viejo=str(old_value),
-                AF_valor_nuevo=str(new_value),
+                AF_valor_viejo=old_value,
+                AF_valor_nuevo=new_value,
                 AF_usuario_modificador=self.user.AF_alias
             )
             self.session.add(trace)

@@ -18,7 +18,7 @@ from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 
 from configuration import INDEX_URL
-from shared.forms import ArchivableFormMixin
+from shared.forms import ArchivableFormMixin, format_obj_dates
 from shared.views import ListView, FormView, handle_archiving
 from shared.engine import session
 
@@ -176,11 +176,8 @@ class IncidenceEditView(FormView):
         obj = self.instance
         self.form_title = f"Detalle Incidencia - #{obj.NU_incidencia}"
 
-        obj.TI_fecha_creacion = format(obj.TI_fecha_creacion, r'%Y-%m-%d %H:%M')
-
-        if obj.TI_fecha_archivado:
-            obj.TI_fecha_archivado = format(obj.TI_fecha_archivado, r'%Y-%m-%d %H:%M')
-
+        format_obj_dates(obj)
+        
         return render_template("incidence/form.html", obj=obj)
 
 

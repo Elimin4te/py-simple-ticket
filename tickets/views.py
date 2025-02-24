@@ -9,7 +9,8 @@ from tickets.controllers.incidence import (
 )
 from tickets.controllers.ticket import (
     TicketListView,
-    TicketCreateView
+    TicketCreateView,
+    TicketDetailView
 )
 from tickets.controllers.task import (
     TaskListView
@@ -32,6 +33,7 @@ IncidenceEditView().register_in_app(tickets_bp)
 
 TicketListView().register_in_app(tickets_bp)
 TicketCreateView().register_in_app(tickets_bp)
+TicketDetailView().register_in_app(tickets_bp)
 
 TaskListView().register_in_app(tickets_bp)
 

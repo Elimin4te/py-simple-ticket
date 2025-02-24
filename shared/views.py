@@ -265,6 +265,14 @@ class FormView(View):
         if form.validate():
             self.form_data: dict = form.data
             self.form_data.pop('csrf_token')
+
+            # Replace empty strings for None
+            for key, value in self.form_data.items():
+                if isinstance(value, str):
+                    self.form_data[key] = (
+                        None if value.strip() == '' else value
+                    )
+
             self.on_valid()
             return redirect(self.redirect_to)
 

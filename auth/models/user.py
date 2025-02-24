@@ -55,7 +55,9 @@ class Usuario(Base, IsActiveMixin, UserMixin):
     )
 
     # ------ User
-    AF_usuario_supervisor: NullableString = mapped_column(ForeignKey('Usuarios.AF_alias'), default=NULL)
+    AF_usuario_supervisor: NullableString = mapped_column(
+        ForeignKey('Usuarios.AF_alias'), default=NULL, nullable=True
+    )
     supervisor: Mapped[Optional["Usuario"]] = relationship(
         remote_side=[AF_alias], 
         backref=backref('supervisados', lazy='joined')

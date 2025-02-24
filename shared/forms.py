@@ -3,6 +3,8 @@ from wtforms.validators import DataRequired, ValidationError
 
 from shared.validators import code_validator, name_validator, length_validator
 
+import dateparser
+
 def assertion_catcher(func):
     """ Decorator for making field validators based off assertion strategy. """
 
@@ -45,3 +47,29 @@ class CommonEntityFormMixin:
 class ArchivableFormMixin:
     BO_archivado = BooleanField("Archivado")
     AF_motivo_archivado = StringField("Motivo de Archivado", validators=[archiving_reason_validator])
+
+
+def format_obj_dates(obj: object, _format: str = '%Y-%m-%d %H:%M'):
+    """Mutates an object for formatting it's dates attributes based of a given format."""
+    time_attrs = tuple(filter(lambda k: k.startswith('TI_'), obj.__dict__.keys()))
+    for attr in time_attrs:
+        _old = getattr(obj, attr)
+        # Assures it's not None
+        if _old:
+            # Assures it has the correct type
+            if isinstance(_old, str):
+                _old = dateparser.parse(_old)
+            # Replace
+            _new = _old.strftime(_format) 
+            setattr(obj, attr, _new)
+
+
+def sanitize_url_filter(model: object, request) -> dict:
+
+    filter_set = {}
+    for arg, val in request.args.items():
+        if arg in model.__dict__:
+            val = True if val == 'true' else False if val == 'false' else val
+            filter_set[arg] = val
+
+    return filter_set
