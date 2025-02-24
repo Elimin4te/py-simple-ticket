@@ -1,0 +1,156 @@
+<div class="form-group row">
+    <label class="col-sm-2 control-label text-sm-right pt-2"># Ticket</label>
+    <div class="col-sm-1">
+        <input type="text" name="NU_ticket" class="form-control" readonly value="{{ obj.NU_ticket }}">
+    </div>
+    <label class="col-sm-1 control-label text-sm-right pt-2"># Incidencia</label>
+    <div class="col-sm-1">
+        <a href="/incidences/detail?_={{ obj.NU_incidencia }}">
+            <input type="text" name="NU_incidencia" class="form-control" readonly value="{{ obj.NU_incidencia }}"
+                style="cursor: pointer; font-weight: 600;">
+        </a>
+    </div>
+    <label class="col-sm-1 control-label text-sm-right pt-2">Título <span class="required"> *</span></label>
+    <div class="col-sm-5">
+        <input type="text" name="AF_titulo" class="form-control" placeholder="Título" required=""
+            value="{{ obj.AF_titulo }}">
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-2 control-label text-lg-right pt-2">Descripción <span class="required"> *</span></label>
+    <div class="col-sm-9">
+        <textarea class="summernote" name="AF_descripcion" data-plugin-summernote
+            data-plugin-options='{ "height": 180, "codemirror": { "theme": "ambiance" } }'>
+            {{ obj.AF_descripcion }}
+        </textarea>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label class="col-sm-2 control-label text-lg-right pt-2">Categoría <span class="required"> *</span></label>
+    <div class="col-sm-3">
+        <select data-plugin-selectTwo class="form-control populate" name="AF_codigo_categoria" id="category-select"
+            data-plugin-options='{ "placeholder": "Seleccione una Categoría", "allowClear": true }' required>
+            <option value=""></option>
+            {% for category in categories %}
+            <option value="{{ category.AF_codigo }}">
+                {{ category.authorative_name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">Prioridad <span class="required"> *</span></label>
+    <div class="col-sm-2">
+        <select data-plugin-selectTwo class="form-control populate" name="AF_codigo_prioridad" id="priority-select"
+            data-plugin-options='{ "placeholder": "Seleccione Prioridad", "allowClear": true }' required>
+            <option value=""></option>
+            {% for priority in priorities %}
+            <option value="{{ priority.AF_codigo }}">
+                {{ priority.AF_codigo }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">Estatus</label>
+    <div class="col-sm-2">
+        <select class="form-control" name="AF_estatus">
+            {% for status in statuses %}
+            <option value="{{ status }}" {% if status==obj.AF_estatus %}selected{% endif %}>
+                {{ status }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label class="col-sm-2 control-label text-lg-right pt-2">Analista</label>
+    <div class="col-sm-3">
+        <select data-plugin-selectTwo class="form-control populate" name="AF_analista_asignado" id="analist-select"
+            data-plugin-options='{ "placeholder": "Asigne un Analista", "allowClear": true }'>
+            <option value=""></option>
+            {% for analist in analists %}
+            <option value="{{ analist.AF_alias }}">
+                {{ analist.AF_nombre }} {{ analist.AF_apellido }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">F. Asignación</label>
+    <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </span>
+            {% if obj.TI_fecha_asignacion %}
+            <input data-plugin-masked-input data-input-mask="9999/99/99 99:99" class="form-control"
+                value="{{ obj.TI_fecha_asignacion }}" readonly>
+            {% else %}
+            <input type="text" class="form-control" value="N.A" readonly>
+            {% endif %}
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">F. Resolución</label>
+    <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </span>
+            {% if obj.TI_fecha_resolucion %}
+            <input data-plugin-masked-input data-input-mask="9999/99/99 99:99" class="form-control"
+                value="{{ obj.TI_fecha_resolucion }}" readonly>
+            {% else %}
+            <input type="text" class="form-control" value="N.A" readonly>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="form-group row" style="padding-bottom: 15px !important; margin-bottom: 15px !important;">
+
+    <label class="col-sm-2 control-label text-lg-right pt-2">Archivar</label>
+    <div class="col-sm-1">
+        <div class="switch switch-sm switch-primary">
+            <input type="checkbox" name="BO_archivado" data-plugin-ios-switch="" {% if obj.BO_archivado
+                %}checked="checked" {% endif %} style="display: none;">
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-sm-right pt-2">Motivo</label>
+    <div class="col-sm-4">
+        <input type="text" name="AF_motivo_archivado" class="form-control" placeholder="Establecer motivo de archivado."
+            value="{{ obj.AF_motivo_archivado or '' }}">
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">F. Archivado</label>
+    <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </span>
+            {% if obj.TI_fecha_archivado %}
+            <input data-plugin-masked-input data-input-mask="9999/99/99 99:99" class="form-control"
+                value="{{ obj.TI_fecha_archivado }}" readonly>
+            {% else %}
+            <input type="text" class="form-control" value="N.A" readonly>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Set defaults
+        $('#category-select').val('{{ obj.AF_codigo_categoria }}').trigger('change');
+        $('#priority-select').val('{{ obj.AF_codigo_prioridad }}').trigger('change');
+        $('#analist-select').val('{{ obj.AF_analista_asignado }}').trigger('change');
+    });
+</script>

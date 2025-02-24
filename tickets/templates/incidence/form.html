@@ -1,0 +1,87 @@
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2"># Incidencia</label>
+    <div class="col-sm-1">
+        <input type="text" class="form-control" readonly value="{{ obj.NU_incidencia }}">
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">F. Creación</label>
+    <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </span>
+            <input data-plugin-masked-input data-input-mask="9999/99/99 99:99" class="form-control"
+                value="{{ obj.TI_fecha_creacion }}" readonly>
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-sm-right pt-2">Ticket Asociado</span></label>
+    <div class="col-sm-1">
+        <a {% if obj.associated_ticket_no %}href="/tickets/detail?_={{ obj.associated_ticket_no }}"{% endif %}>
+            <input type="text" class="form-control" value="{{ obj.associated_ticket_no or 'Ninguno' }}" readonly {% if
+                obj.associated_ticket_no %} style="cursor: pointer;" {% endif %}>
+        </a>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Título</span></label>
+    <div class="col-sm-6">
+        <input type="text" class="form-control" value="{{ obj.AF_titulo }}" readonly>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Usuario Reportador</span></label>
+    <div class="col-sm-6">
+        <input type="text" class="form-control" value="{{ obj.AF_nombre_reportador }}" readonly>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Email del Usuario</span></label>
+    <div class="col-sm-6">
+        <input type="text" class="form-control" value="{{ obj.AF_correo_reportador }}" readonly>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Descripción</span></label>
+    <div class="col-sm-6">
+        <textarea class="form-control" readonly> {{ obj.AF_descripcion }} </textarea>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-lg-3 control-label text-lg-right pt-2 col-lg-3">Archivar</label>
+    <div class="col-lg-9">
+        <div class="switch switch-sm switch-primary">
+            <input type="checkbox" name="BO_archivado" data-plugin-ios-switch="" {% if obj.BO_archivado
+                %}checked="checked" {% endif %} style="display: none;">
+        </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Motivo Archivado</label>
+    <div class="col-sm-6">
+        <input type="text" name="AF_motivo_archivado" class="form-control" placeholder="Establecer motivo de archivado."
+            value="{{ obj.AF_motivo_archivado or '' }}">
+    </div>
+</div>
+
+<div class="form-group row"
+    style="border-bottom: 1px solid #eff2f7 !important; padding-bottom: 15px !important; margin-bottom: 15px !important;">
+    <label class="col-lg-3 control-label text-lg-right pt-2">Fecha de Archivado</label>
+    <div class="col-lg-6">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </span>
+            <input {% if obj.TI_fecha_archivado %} data-plugin-masked-input data-input-mask="9999/99/99 99:99" {% endif %} class="form-control"
+                value="{{ obj.TI_fecha_archivado or 'N.A' }}" readonly>
+        </div>
+    </div>
+</div>

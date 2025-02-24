@@ -1,0 +1,49 @@
+<li class="ib mr-2">
+    <div class="btn-group">
+        <a href="#" class="item-action fas fa-chevron-down" data-toggle="dropdown"></a>
+        <ul class="dropdown-menu" role="menu">
+            {% for status in statuses %}
+            <li class="dropdown-item"><a class="dropdown-link" onclick="addURLParameter('AF_estatus', '{{ status }}')">
+                    {{ status }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</li>
+<li class="ib mr-2">
+    <div class="btn-group">
+        <a href="#" class="item-action fas fa-list-alt" data-toggle="dropdown"></a>
+        <ul class="dropdown-menu" role="menu">
+            {% for category in categories %}
+            <li class="dropdown-item"><a class="dropdown-link"
+                    onclick="addURLParameter('AF_codigo_categoria', '{{ category.AF_codigo }}')">
+                    {{ category.authorative_name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</li>
+<li class="ib mr-2">
+    <div class="btn-group">
+        <a href="#" class="item-action fas fa-user" data-toggle="dropdown"></a>
+        <ul class="dropdown-menu" role="menu">
+            {% for analist in analists %}
+            <li class="dropdown-item"><a class="dropdown-link"
+                onclick="addURLParameter('AF_analista_asignado', '{{ analist.AF_alias }}')">
+                    {{ analist.AF_nombre }} {{ analist.AF_apellido }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</li>
+<li class="ib mr-2">
+    <a class="item-action fas fa-archive" onclick="addURLParameter('BO_archivado', true)"></a>
+</li>
+<li class="ib mr-2">
+    <a class="item-action fas fa-sync" onclick="window.location.search = ''"></a>
+</li>
+
+<script>
+    function addURLParameter(name, value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set(name, value);
+        window.location.assign(url);
+    }
+</script>
