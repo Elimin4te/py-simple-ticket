@@ -134,7 +134,7 @@ class TicketCreateView(FormView):
             incoming_incidence = IncidenceController(session).get(incoming_incidence)
 
         else:
-            incidences = IncidenceController(session).all('NU_incidencia', 'AF_estatus')
+            incidences = IncidenceController(session).all('NU_incidencia')
             incidences = tuple(filter(lambda i: not i.BO_archivado and not i.has_ticket, incidences))
 
         categories = CategoryController(session).filter(BO_activo=True)

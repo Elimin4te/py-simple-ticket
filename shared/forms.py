@@ -38,15 +38,23 @@ required_string = lambda name, *validators: StringField(name, validators=[DataRe
 required_int = lambda name, *validators: IntegerField(name, validators=[DataRequired(), *validators])
 
 
-class CommonEntityFormMixin:
-    AF_codigo = required_string("Código", form_code_validator)
-    AF_nombre = required_string("Nombre", form_name_validator)
-    AF_descripcion = required_string("Descripción")
+def get_common_entity_form_mixin():
+
+    class CommonEntityFormMixin:
+        AF_codigo = required_string("Código", form_code_validator)
+        AF_nombre = required_string("Nombre", form_name_validator)
+        AF_descripcion = required_string("Descripción")
+
+    return CommonEntityFormMixin
 
 
 class ArchivableFormMixin:
     BO_archivado = BooleanField("Archivado")
     AF_motivo_archivado = StringField("Motivo de Archivado", validators=[archiving_reason_validator])
+
+
+class DisabableFormMixin:
+    BO_activo = BooleanField("¿Activo?")
 
 
 def format_obj_dates(obj: object, _format: str = '%Y-%m-%d %H:%M'):

@@ -8,8 +8,10 @@ from flask_wtf import FlaskForm
 from wtforms.validators import NumberRange
 
 from shared.views import ListView, FormView
-from shared.forms import CommonEntityFormMixin, required_string, required_int
+from shared.forms import get_common_entity_form_mixin, required_string, required_int
 from shared.engine import session
+
+from copy import copy
 
 PRIORITY_EDIT_URL = '/priorities/edit'
 PRIORITY_ADD_URL = '/priorities/add'
@@ -23,7 +25,7 @@ class PriorityController(AuditedModelController[Prioridad]):
 
 
 # Remove unused attr making a class copy
-PriorityCommonMixin = CommonEntityFormMixin
+PriorityCommonMixin = get_common_entity_form_mixin()
 delattr(PriorityCommonMixin, 'AF_nombre')
 
 
@@ -62,11 +64,11 @@ class PriorityCreateView(FormView):
     methods = "GET", "POST"
     controller = PriorityController(session, current_user)
     url = PRIORITY_ADD_URL
+    redirect_to = PRIORITY_LIST_URL
 
     def on_valid(self):
         instance = Prioridad(**self.form_data)
         self.controller.create(instance)
-        return redirect(PRIORITY_LIST_URL)
 
     def get_form_html(self) -> str:
         return render_template("priority/form.html")
@@ -76,21 +78,14 @@ class PriorityEditView(PriorityCreateView):
 
     instance: Prioridad = None
     url = PRIORITY_EDIT_URL
-
-    def get_instance(self):
-        priority = request.args.get('_')
-        priority = self.controller.get(priority)
-        return priority
+    edit_mode = True
+    back_button = True
 
     def on_valid(self):
-        priority = self.get_instance()
-        self.controller.update(priority, **self.form_data)
-        return redirect(PRIORITY_LIST_URL)
+        self.controller.update(self.instance, **self.form_data)
 
     def get_form_html(self) -> str:
-        
-        priority = self.get_instance()
-        self.form_title = f"Editar Prioridad - {priority.AF_codigo}"
+        self.form_title = f"Editar Prioridad - {self.instance.AF_codigo}"
         return render_template(
-            "priority/form.html", edit_mode=True, priority=priority
+            "priority/form.html", edit_mode=True, priority=self.instance
         )
