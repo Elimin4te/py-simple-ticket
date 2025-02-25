@@ -1,7 +1,7 @@
 from shared.controllers.audited import AuditedModelController
 from shared.controllers.mixins import ArchiveActionMixin
 
-from tickets.models import Ticket, Prioridad
+from tickets.models import Ticket
 from tickets.models.ticket import STATUS_OPTS
 
 from auth.models import Usuario
@@ -14,11 +14,11 @@ from tickets.controllers.category import CategoryController
 from datetime import datetime
 from configuration.settings import TIMEZONE
 
-from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, SelectField
-
 from flask import request, render_template
 from flask_login import login_required, current_user
+
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, StringField, SelectField
 
 from shared.views import ListView, FormView, handle_archiving
 from shared.forms import required_string, ArchivableFormMixin, format_obj_dates, sanitize_url_filter
@@ -108,7 +108,6 @@ class TicketCreateView(FormView):
     page_title = "Tickets"
     active_menu_item = "tickets"
 
-    methods = "GET", "POST"
     controller = TicketController(session, current_user)
     url = TICKET_ADD_URL
     redirect_to = TICKET_LIST_URL
@@ -173,6 +172,15 @@ class TicketDetailView(TicketCreateView):
         handle_archiving(self)
 
         self.controller.update(self.instance, **update_kwargs)
+
+    def get_helper_buttons_html(self) -> str:
+        list_traces_url  = f'/tasks?search={self.instance.NU_ticket}'
+        create_trace_url = f'/tasks/add?ticket={self.instance.NU_ticket}'
+        return render_template(
+            'ticket/helper-buttons.html',
+            list_traces_url=list_traces_url,
+            create_trace_url=create_trace_url
+        )
 
     def get_form_html(self) -> str:
 

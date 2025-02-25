@@ -45,9 +45,19 @@ class ReadController(BaseModelController):
 
         return tuple(val[0] for val in self.session.execute(statement).unique())
 
-    def filter(self, *args, order_by: str = None, **criteria) -> tuple[T]:
+    def filter(self, *args, order_by: str | tuple[str] = None, **criteria) -> tuple[T]:
         """ Filter the registries using the specified criteria, where args is used for sqlalchemy field expressions and kwargs used for filter_by expressions. """
-        expression = self.select().order_by(order_by).filter_by(**criteria).filter(*args)
+        
+        if isinstance(order_by, tuple):
+            order_by = [getattr(self.model, attr) for attr in order_by]
+        else: order_by = [order_by]
+
+        expression = self.select()
+
+        if order_by:
+            expression = expression.order_by(*order_by)
+            
+        expression = expression.filter_by(**criteria).filter(*args)
         return tuple(val[0] for val in self.session.execute(expression).unique())
 
 

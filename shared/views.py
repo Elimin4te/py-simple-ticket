@@ -1,7 +1,7 @@
 from flask import make_response, Response, Blueprint, Flask, redirect, request
 from jinja2 import FileSystemLoader, Environment
 
-from flask_login import current_user
+from flask_login import current_user, login_required
 from flask.views import MethodView
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import generate_csrf
@@ -68,6 +68,8 @@ def render_list_view(
 
 
 class View(MethodView):
+    """ Base auth-required view."""
+    decorators=[login_required]
 
     url: str = None
     methods: tuple = "GET",
@@ -199,11 +201,13 @@ class FormView(View):
     controller: object = None
     """Controller class used for this view."""
 
+    methods = "GET", "POST"
+
     def get_instance(self) -> object | None:
         ...
 
-    def on_valid(self) -> Response:
-        """Inheritable method that executed an action when the form post was valid, should return a Response."""
+    def on_valid(self) -> None:
+        """Inheritable method that executed an action when the form post was valid."""
         ...
 
     def get_form_html(self) -> str:

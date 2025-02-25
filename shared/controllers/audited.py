@@ -12,9 +12,10 @@ class AuditedModelController(ModelController[T], Generic[T]):
     model_pk_field: str = None
     """ Define the pk_field for the model to specify how the audit record will be created. """
 
-    def __init__(self, session, user: Usuario = None) -> None:
+    def __init__(self, session, user: Usuario = None, override: bool = False) -> None:
         super().__init__(session)
         self.user = user
+        self.override = override
 
 
     def get_instance_pk(self, instance: _BaseDerivatedModelInstance) -> str:
@@ -24,7 +25,10 @@ class AuditedModelController(ModelController[T], Generic[T]):
     def validate_instance(func):
         
         def wrapped(self, *args, **kwargs):
-            assert self.user, "La clase debe ser instanciada con un usuario para poder realizar esta operación."
+            if not self.override:
+                assert self.user, (
+                    "La clase debe ser instanciada con un usuario para poder realizar esta operación."
+                )
             return func(self, *args, **kwargs)
 
         return wrapped
@@ -45,22 +49,24 @@ class AuditedModelController(ModelController[T], Generic[T]):
     @validate_instance
     def update(self, instance: _BaseDerivatedModelInstance, **updating_fields) -> T:
 
-        for key, value in updating_fields.items():
+        if not self.override:
 
-            old_value = str(getattr(instance, key))[:128]
-            new_value = str(value)[:128]
-            if old_value == new_value: continue
+            for key, value in updating_fields.items():
 
-            trace = Auditoria(
-                AF_tabla=self.model.__tablename__,
-                AF_accion="Modificar",
-                AF_id_registro=self.get_instance_pk(instance),
-                AF_campo_modificado=key,
-                AF_valor_viejo=old_value,
-                AF_valor_nuevo=new_value,
-                AF_usuario_modificador=self.user.AF_alias
-            )
-            self.session.add(trace)
+                old_value = str(getattr(instance, key))[:128]
+                new_value = str(value)[:128]
+                if old_value == new_value: continue
+
+                trace = Auditoria(
+                    AF_tabla=self.model.__tablename__,
+                    AF_accion="Modificar",
+                    AF_id_registro=self.get_instance_pk(instance),
+                    AF_campo_modificado=key,
+                    AF_valor_viejo=old_value,
+                    AF_valor_nuevo=new_value,
+                    AF_usuario_modificador=self.user.AF_alias
+                )
+                self.session.add(trace)
 
         return super().update(instance, **updating_fields)
 
@@ -82,5 +88,5 @@ class AuditedModelController(ModelController[T], Generic[T]):
     def all(self, *order_by) -> tuple[T]:
         return super().all(*order_by)
 
-    def filter(self, *expression, order_by: str = None, **criteria) -> tuple[T]:
+    def filter(self, *expression, order_by: str | tuple = None, **criteria) -> tuple[T]:
         return super().filter(*expression, order_by=order_by, **criteria)

@@ -13,7 +13,9 @@ from tickets.controllers.ticket import (
     TicketDetailView
 )
 from tickets.controllers.task import (
-    TaskListView
+    TaskListView,
+    TaskCreateView,
+    TaskEditView
 )
 from tickets.controllers.priority import (
     PriorityListView, 
@@ -38,6 +40,8 @@ TicketCreateView().register_in_app(tickets_bp)
 TicketDetailView().register_in_app(tickets_bp)
 
 TaskListView().register_in_app(tickets_bp)
+TaskCreateView().register_in_app(tickets_bp)
+TaskEditView().register_in_app(tickets_bp)
 
 PriorityListView().register_in_app(tickets_bp)
 PriorityCreateView().register_in_app(tickets_bp)
@@ -122,7 +126,7 @@ app_menu.add_entry(
         position=60,
         childs=(
             MenuChild("Listado", TaskListView.url),
-            MenuChild("Crear", INDEX_URL)
+            MenuChild("Crear", TaskCreateView.url)
         )
     )
 )
