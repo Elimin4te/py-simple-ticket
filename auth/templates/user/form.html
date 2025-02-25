@@ -1,0 +1,185 @@
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Alias <span class="required"> *</span></label>
+    <div class="col-sm-2">
+        <input type="text" name="AF_alias" class="form-control" placeholder="Escriba un alias"
+        {% if edit_mode %} readonly value="{{ obj.AF_alias }}" {% endif %} required>
+    </div>
+    {% if edit_mode and obj.AF_codigo_rol=='ASPR' %}
+    <label class="col-sm-1 control-label text-lg-right pt-2">Supervisor <span class="required"> *</span></label>
+    <div class="col-sm-2">
+        <select data-plugin-selectTwo class="form-control populate" name="AF_usuario_supervisor" id="supervisor-select"
+            data-plugin-options='{ "placeholder": "Seleccione un Supervisor", "allowClear": true }' required>
+            <option value=""></option>
+            {% for sup in supervisors %}
+            <option value="{{ sup.AF_alias }}">
+                {{ sup.full_name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+    <label class="col-sm-1 control-label text-sm-right pt-2 ">Rol <span class="required"> *</span></label>
+    <div  {% if not (edit_mode and obj.AF_codigo_rol=='ASPR') %} class="col-sm-2" {% else %} class="col-sm-1" {% endif %}>
+        <select data-plugin-selectTwo class="form-control populate" name="AF_codigo_rol" id="role-select"
+            data-plugin-options='{ "placeholder": "Rol", "allowClear": true }' required>
+            <option value=""></option>
+            {% for role in roles %}
+            <option value="{{ role.AF_codigo }}">
+                {{ role.AF_nombre }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Nombre <span class="required"> *</span></label>
+    <div class="col-sm-3">
+        <input type="text" name="AF_nombre" class="form-control" placeholder="Nombre del personal"
+        {% if edit_mode %} value="{{ obj.AF_nombre }}" {% endif %} required>
+    </div>
+    <label class="col-sm-1 control-label text-sm-right pt-2">Apellido <span class="required"> *</span></label>
+    <div class="col-sm-3">
+        <input type="text" name="AF_apellido" class="form-control" placeholder="Apellido del personal"
+        {% if edit_mode %} value="{{ obj.AF_apellido }}" {% endif %} required>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Cédula <span class="required"> *</span></label>
+    <div class="col-sm-3">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-id-card"></i>
+                </span>
+            </span>
+            <input type="text" class="form-control" name="NU_cedula" placeholder="V-__.___.___"
+            {% if edit_mode %} value="{{ obj.NU_cedula }}"{% endif %} required
+            data-plugin-masked-input data-input-mask="99.999.999">
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-sm-right pt-2">Clave <span class="required"> *</span></label>
+    <div class="col-sm-3">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                </span>
+            </span>
+            <input type="password" class="form-control" name="AF_contraseña" placeholder="Establezca una clave."
+            {% if not edit_mode %} required {% endif %}>
+        </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label class="col-sm-3 control-label text-sm-right pt-2">Correo <span class="required"> *</span></label>
+    <div class="col-lg-3">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                </span>
+            </span>
+            <input type="email" class="form-control" name="AF_correo" placeholder="Correo del personal."
+            {% if edit_mode %} value="{{ obj.AF_correo }}"{% endif %} required>
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-sm-right pt-2">Correo Alt.</label>
+    <div class="col-lg-3">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                </span>
+            </span>
+            <input type="email" class="form-control" name="AF_correo_alternativo" placeholder="Correo alternativo del personal."
+            {% if edit_mode %} value="{{ obj.AF_correo_alternativo or '' }}"{% endif %}>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="form-group row" {% if not edit_mode %} style="padding-bottom: 15px !important; margin-bottom: 15px !important;" {% endif %}>
+    <label class="col-sm-3 control-label text-sm-right pt-2">Telf. Casa</label>
+    <div class="col-lg-3">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-phone"></i>
+                </span>
+            </span>
+            <input type="email" class="form-control" name="AF_telefono_casa" placeholder="Teléfono de casa del personal."
+            {% if edit_mode %} value="{{ obj.AF_telefono_casa or '' }}"{% endif %}>
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">Telf. Personal</label>
+    <div class="col-lg-3">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-mobile"></i>
+                </span>
+            </span>
+            <input type="email" class="form-control" name="AF_telefono_personal" placeholder="Teléfono personal del personal."
+            {% if edit_mode %} value="{{ obj.AF_telefono_personal or '' }}"{% endif %}>
+        </div>
+    </div>
+</div>
+
+{% if edit_mode %}
+<div class="form-group row" style="padding-bottom: 15px !important; margin-bottom: 15px !important;">
+
+    <label class="col-sm-3 control-label text-lg-right pt-2">¿Activo?</label>
+    <div class="col-sm-1">
+        <div class="switch switch-sm switch-primary">
+            <input type="checkbox" name="BO_activo" data-plugin-ios-switch="" {% if obj.BO_activo
+                %}checked="checked" {% endif %} style="display: none;">
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">Fecha Registro</label>
+    <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </span>
+            {% if obj.TI_fecha_ingreso %}
+            <input data-plugin-masked-input data-input-mask="9999/99/99 99:99" class="form-control"
+                value="{{ obj.TI_fecha_ingreso }}" readonly>
+            {% else %}
+            <input type="text" class="form-control" value="N.A" readonly>
+            {% endif %}
+
+        </div>
+    </div>
+    <label class="col-sm-1 control-label text-lg-right pt-2">Último Ingreso</label>
+    <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </span>
+            {% if obj.TI_ultimo_inicio_sesion %}
+            <input data-plugin-masked-input data-input-mask="9999/99/99 99:99" class="form-control"
+                value="{{ obj.TI_ultimo_inicio_sesion }}" readonly>
+            {% else %}
+            <input type="text" class="form-control" value="N.A" readonly>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Set defaults
+        $('#role-select').val('{{ obj.AF_codigo_rol }}').trigger('change');
+        $('#supervisor-select').val('{{ obj.AF_usuario_supervisor }}').trigger('change');
+    });
+</script>
+{% endif %}

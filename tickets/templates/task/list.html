@@ -1,0 +1,33 @@
+<section class="card">
+    <div class="card-body">
+        <table class="table table-responsive-md mb-0" 
+        style="text-align: center; font-size: medium; overflow: hidden; text-overflow: ellipsis;">
+            <thead>
+                <tr>
+                    <th># Ticket</th>
+                    <th># Correlativo</th>
+                    <th>Actividad</th>
+                    <th>Fecha de Actividad</th>
+                    <th>Analista</th>
+                    <th>Editar</th>
+                </tr>
+            </thead> 
+            <tbody>
+                {% for obj in objects %}
+                <tr {% if obj.BO_anulada %} style="color: red" {% endif %}>
+                    <td>{{ obj.NU_ticket }}</td>
+                    <td>{{ obj.NU_correlativo }}</td>
+                    <td>{{ obj.AF_actividad }}</td>
+                    <td>{{ obj.TI_fecha_actividad }}</td>
+                    <td>{{ obj.usuario_realizador.AF_alias or 'Sin Asignar'}}</td>
+                    <td>
+                        <a href="{{ edit_url }}?_={{ obj.NU_traza }}">
+                            <i class="fas fa-edit" style="color: #194d80;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>

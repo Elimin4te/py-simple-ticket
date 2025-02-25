@@ -1,0 +1,14 @@
+<li class="ib mr-2">
+    <a class="item-action fas fa-ban" onclick="addURLParameter('BO_anulada', true)"></a>
+</li>
+<li class="ib mr-2">
+    <a class="item-action fas fa-sync" onclick="window.location.search = ''"></a>
+</li>
+
+<script>
+    function addURLParameter(name, value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set(name, value);
+        window.location.assign(url);
+    }
+</script>

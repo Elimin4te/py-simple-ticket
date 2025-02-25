@@ -1,0 +1,35 @@
+<section class="card">
+    <div class="card-body">
+        <table class="table table-responsive-md mb-0" 
+        style="text-align: center; font-size: medium; overflow: hidden; text-overflow: ellipsis;">
+            <thead>
+                <tr>
+                    <th>Alias</th>
+                    <th>Nombre Completo</th>
+                    <th>Rol</th>
+                    <th>Cédula</th>
+                    <th>Correo</th>
+                    <th>Último Inicio</th>
+                    <th>Editar</th>
+                </tr>
+            </thead> 
+            <tbody>
+                {% for obj in objects %}
+                <tr {% if not obj.BO_activo %} style="color: red" {% endif %}>
+                    <td>{{ obj.AF_alias }}</td>
+                    <td>{{ obj.full_name }}</td>
+                    <td>{{ obj.rol.AF_nombre }}</td>
+                    <td>{{ "{:,}".format(obj.NU_cedula).replace(",", ".") }}</td>
+                    <td>{{ obj.AF_correo }}</td>
+                    <td>{{ obj.TI_ultimo_inicio_sesion or 'N.A' }}</td>
+                    <td>
+                        <a href="{{ edit_url }}?_={{ obj.AF_alias }}">
+                            <i class="fas fa-edit" style="color: #194d80;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
